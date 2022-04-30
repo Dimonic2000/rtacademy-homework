@@ -7,9 +7,10 @@
 <body>
 <script>
     let cityName = 'киїВ';
+    cityName = cityName.toLowerCase();
     // ще варіанти: "лЬвів", "одеСА", "хАРКіВ"
     // ваш код пишіть тут
-    let cityNameCapitalized = 'dimonic';
+    let cityNameCapitalized = cityName[0].toUpperCase() + cityName.substring( 1, cityName.length );
     console.log( cityNameCapitalized );
 </script>
 </body>
