@@ -24,6 +24,11 @@
     console.log(a);
     console.log(b);
 
+    b = [ a, a = b ].shift();
+
+    console.log(a);
+    console.log(b);
+
     b = a + ( a = b ) - b;
 
     console.log(a);
