@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.3</title>
+</head>
+<body>
+<script>
+    let a=10;
+    let b=20;
+
+    console.log(a);
+    console.log(b);
+
+    a = a.toString() + '|' + b.toString();
+    b = parseInt(a.substring( 0, a.indexOf('|') ));
+    a = parseInt(a.substring( a.indexOf('|') + 1, a.length ));
+
+    console.log(a);
+    console.log(b);
+
+    b = [ a, a = b ][ 0 ];
+
+    console.log(a);
+    console.log(b);
+
+    b = a + ( a = b ) - b;
+
+    console.log(a);
+    console.log(b);
+</script>
+</body>
+</html>
