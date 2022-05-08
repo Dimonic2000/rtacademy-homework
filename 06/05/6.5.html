@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.3</title>
+</head>
+<body>
+<script>
+    let start = 1, stop = 32, i, prefix;
+
+/*
+    console.log( start );
+    console.log( stop );
+*/
+
+    console.log(" ################ FOR: ");
+
+    for( i = start; i <= stop; i++ )
+    {
+        if( i % 2 == 0 )
+        {
+            prefix = '';
+            if( i % 4 == 0 )
+            {
+                prefix += '*';
+            }
+
+            if( i % 10 == 0 )
+            {
+                prefix += '^';
+            }
+
+            console.log( prefix + i );
+        }
+    }
+
+    console.log(" ################ WHILE: ");
+
+    i = start;
+    while( i <= stop  )
+    {
+        if( i % 2 == 0 )
+        {
+            prefix = '';
+            if( i % 4 == 0 )
+            {
+                prefix += '*';
+            }
+
+            if( i % 10 == 0 )
+            {
+                prefix += '^';
+            }
+
+            console.log( prefix + i );
+        }
+        i++;
+    }
+
+</script>
+</body>
+</html>
