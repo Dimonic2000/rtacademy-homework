@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.2</title>
+</head>
+<body>
+<script>
+    /* Виправляти регістр для вказаного значення змінної cityName. Перший символ повинен бути з великої літери, інші - маленькими
+    * ще варіанти: "лЬвів", "одеСА", "хАРКіВ" */
+
+
+    /* 1 - й варiант рiшення */
+    function changeCapitalization1( cityName = '' )
+    {
+        cityName = cityName.toLowerCase();
+        return cityName[0].toUpperCase() + cityName.substring( 1, cityName.length );
+    }
+
+    /* 2 - й варiант рiшення */
+    function changeCapitalization2( cityName = '' )
+    {
+        let firstLetter  = cityName.substring(0, 1).toUpperCase();
+        let otherLetter  = cityName.substring( 1, cityName.length ).toLowerCase();
+        return firstLetter + otherLetter;
+    }
+
+    console.log( changeCapitalization1('киїВ') );
+    console.log( changeCapitalization2('киїВ') );
+
+    console.log( changeCapitalization1('хАРКіВ') );
+    console.log( changeCapitalization2('хАРКіВ') );
+
+    console.log( changeCapitalization1('одеСА') );
+    console.log( changeCapitalization2('одеСА') );
+</script>
+</body>
+</html>
