@@ -47,13 +47,13 @@
         Bengalūru,12.9700,77.5600,India,6787000
         Bangkok,13.7500,100.5166,Thailand,6704000`;
 
-    function checkLength( rows, len = 2 )
+    function checkLength( rows, minLen = 2 )
     {
-        for( j = 0; j < rows.length; j++ )
+        for( let j = 0; j < rows.length; j++ )
         {
             //console.log(rows[j].length);
 
-            if( rows[j].trim().length < len )
+            if( rows[j].trim().length < minLen )
             {
                 // Пропускаем вставку в резалт массив если меньше 2
                 return false;
@@ -67,12 +67,12 @@
         let resultArray = [],
             contentArray = content.split( "\n" )
 
-        for( i = 0; i < contentArray.length; i++ )
+        for( let i = 0; i < contentArray.length; i++ )
         {
             if( contentArray[i].trim().length >= 10 )
             {
                 let row = contentArray[i].trim().split( "," );
-                // Попытка реализации через backe, неудачнаяя
+                // Попытка реализации через backe (неудачнаяя)
                 /*for( j = 0; j < row.length; j++ )
                 {
                     if( row[j].trim().length < 10 )
@@ -85,10 +85,10 @@
                 {
                     resultArray.push(
                         {
-                            "city"      : row[ 0 ],
+                            "city"      : row[ 0 ].trim().toString(),
                             "latitude"  : parseFloat( row[ 1 ] ),
                             "longitude" : parseFloat( row[ 2 ] ),
-                            "country"   : row[ 3 ],
+                            "country"   : row[ 3 ].trim().toString(),
                             "population": parseInt( row[ 1 ] )
                         } );
                 }
