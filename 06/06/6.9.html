@@ -45,10 +45,18 @@
         Chennai,13.0900,80.2800,India,7163000
         Taipei,25.0358,121.5683,Taiwan,6900273
         Bengalūru,12.9700,77.5600,India,6787000
-        Bangkok,13.7500,100.5166,Thailand,6704000`;
+
+
+        Bangkok,13.7500,100.5166,Thailand,6704000
+
+        `;
 
     function checkLength( rows, minLen = 2 )
     {
+        if( rows.length < 5 )
+        {
+            return false;
+        }
         for( let j = 0; j < rows.length; j++ )
         {
             //console.log(rows[j].length);
