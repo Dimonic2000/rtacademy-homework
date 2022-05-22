@@ -14,10 +14,10 @@
 
     </style>
 
-    <label for="operand_1">Операнд1</label>
-    <input id="operand_1" name="operand_1" placeholder="only number" required>
+    <label for="operand_1">Операнд1:</label>
+    <input id="operand_1" name="operand_1" required>
 
-    <label for="action">Дiя</label>
+    <label for="action">Дiя:</label>
     <select id="action" name="action">
         <option value="plus" selected>+</option>
         <option value="minus" >-</option>
@@ -27,86 +27,84 @@
         <option value="degree">**</option>
     </select>
 
-    <label>Операнд2</label>
-    <input id="operand_2" name="operand_2" placeholder="only number" required>
+    <label for="operand_2">Операнд2:</label>
+    <input id="operand_2" name="operand_2" required>
 
     <button id="do_something" name="do_something">=</button>
 
-    <label>Результат</label>
+    <label for="result">Результат:</label>
     <input id="result" name="result" readonly>
 
-<script>
-    function checkField( field )
-    {
-        if( document.getElementById( field ) )
+    <script>
+        function checkField( field )
         {
-            let el = document.getElementById( field );
-
-            if( isNaN( el.value ) || !el.value.length )
+            if( document.getElementById( field ) )
             {
-                el.style.background = '#003400';
-                return false;
-            }
-            else
-            {
-                el.style.background = '#ffffff';
-                return true;
-            }
-        }
+                let el = document.getElementById( field );
 
-        return false;
-    }
-
-    function calc()
-    {
-        if(
-            document.getElementById('action') &&
-            document.getElementById('result')
-        )
-        {
-            let checked_value = [ 'operand_1', 'operand_2' ],
-                result = document.getElementById('result');
-
-            if( checked_value.filter(checkField).length == 2 )
-            {
-                let val1 = parseInt( document.getElementById( 'operand_1' ).value ),
-                    val2 = parseInt( document.getElementById( 'operand_2' ).value );
-
-                switch( document.getElementById('action').value )
+                if( isNaN( el.value ) || !el.value.length )
                 {
-                    case 'plus':
-                        result.value = val1 + val2;
-                        break;
-                    case 'minus':
-                        result.value = val1 - val2;
-                        break;
-                    case 'multiply':
-                        result.value = val1 * val2;
-                        break;
-                    case 'divide':
-                        result.value = val1 / val2;
-                        break;
-                    case 'percent':
-                        result.value = val1 % val2;
-                        break;
-                    case 'degree':
-                        result.value = val1 ** val2;
-                        break;
-                    default:
-                        result.value = 'Операция не найдена !';
-                        break;
+                    el.style.background = '#003400';
+                    return false;
+                }
+                else
+                {
+                    el.style.background = '#ffffff';
+                    return true;
                 }
             }
+
+            return false;
         }
-    };
+
+        function calc()
+        {
+            if(
+                document.getElementById('action') &&
+                document.getElementById('result')
+            )
+            {
+                if( [ 'operand_1', 'operand_2' ].filter(checkField).length == 2 )
+                {
+                    let val1 = parseInt( document.getElementById( 'operand_1' ).value ),
+                        val2 = parseInt( document.getElementById( 'operand_2' ).value ),
+                        result = document.getElementById( 'result' );
+
+                    switch( document.getElementById('action').value )
+                    {
+                        case 'plus':
+                            result.value = val1 + val2;
+                            break;
+                        case 'minus':
+                            result.value = val1 - val2;
+                            break;
+                        case 'multiply':
+                            result.value = val1 * val2;
+                            break;
+                        case 'divide':
+                            result.value = val1 / val2;
+                            break;
+                        case 'percent':
+                            result.value = val1 % val2;
+                            break;
+                        case 'degree':
+                            result.value = val1 ** val2;
+                            break;
+                        default:
+                            result.value = 'Операция не найдена !';
+                            break;
+                    }
+                }
+            }
+        };
 
 
-    // Если есть на странице, то вешаем клик:
-    if( document.getElementById( 'do_something' ) )
-    {
-        document.getElementById( 'do_something' ).onclick = calc;
-    }
+        // Если есть на странице, то вешаем клик:
+        if( document.getElementById( 'do_something' ) )
+        {
+            document.getElementById( 'do_something' ).onclick = calc;
+        }
 
-</script>
+    </script>
 </body>
 </html>
