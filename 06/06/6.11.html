@@ -25,6 +25,28 @@
         .operand_2 {
             /*background-color: burlywood;*/
         }
+        label
+        {
+            color: gray;
+        }
+        input, select, button
+        {
+            font-family: Arial;
+            font-size: 11px;
+            -moz-border-radius: 15px;
+            border-radius: 5px;
+            padding:5px;
+            border:1px solid gray;
+        }
+        .error
+        {
+            border:1px solid red;
+        }
+        button
+        {
+            width: 75px;
+            background-color: #126bff;
+        }
 
     </style>
 
@@ -58,7 +80,7 @@
 
     <script>
 
-        const error_color = 'bisque';
+        const error_class = 'error';
 
         function checkField( field )
         {
@@ -68,12 +90,14 @@
 
                 if( el.type == 'text' && isNaN( el.value ) || !el.value.length )
                 {
-                    el.style.background = error_color;
+                    //el.setAttribute("class", error_class);
+                    el.classList.add(error_class);
                     return false;
                 }
                 else
                 {
-                    el.style.background = '#ffffff';
+                    //el.setAttribute("class", '');
+                    el.classList.remove(error_class);
                     return true;
                 }
             }
@@ -105,11 +129,11 @@
                         case 'divide':
                             if( val2 != 0 )
                             {
-                                result.value = val1 / val2;
+                                result.value = Math.round((val1 / val2) * 1000) / 1000;
                             }
                             else
                             {
-                                document.getElementById( 'operand_2' ).style.background = error_color;
+                                document.getElementById( 'operand_2' ).classList.add(error_class);
                             }
                             break;
                         case 'percent':
