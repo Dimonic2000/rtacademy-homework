@@ -8,43 +8,67 @@
 
     <style>
 
-        input, label {
-            display:block;
+        div {
+            /*background-color: bisque;*/
+            float: left;
+            /*display: block;*/
+            /*overflow: auto;*/
+            /*vertical-align: bottom;*/
+            margin: 5px;
+        }
+        label {
+            /*margin: 50px;*/
+        }
+        .operand_1 {
+            /*background-color: brown;*/
+        }
+        .operand_2 {
+            /*background-color: burlywood;*/
         }
 
     </style>
 
-    <label for="operand_1">Операнд1:</label>
-    <input id="operand_1" name="operand_1" required>
-
-    <label for="action">Дiя:</label>
-    <select id="action" name="action">
-        <option value="plus" selected>+</option>
-        <option value="minus" >-</option>
-        <option value="multiply">*</option>
-        <option value="divide">/</option>
-        <option value="percent">%</option>
-        <option value="degree">**</option>
-    </select>
-
-    <label for="operand_2">Операнд2:</label>
-    <input id="operand_2" name="operand_2" required>
-
-    <button id="do_something" name="do_something">=</button>
-
-    <label for="result">Результат:</label>
-    <input id="result" name="result" readonly>
+    <div class="operand_1">
+        <label for="operand_1">Операнд1:</label><br>
+        <input id="operand_1" name="operand_1" required>
+    </div>
+    <div>
+        <label for="action">Дiя:</label><br>
+        <select id="action" name="action">
+            <option value="" selected>Оберiть дiю...</option>
+            <option value="plus">+</option>
+            <option value="minus" >-</option>
+            <option value="multiply">*</option>
+            <option value="divide">/</option>
+            <option value="percent">%</option>
+            <option value="degree">**</option>
+        </select>
+    </div>
+    <div class="operand_2">
+        <label for="operand_2">Операнд2:</label><br>
+        <input id="operand_2" name="operand_2" required>
+    </div>
+    <div><br>
+        <button id="do_something" name="do_something">=</button>
+    </div>
+    <div>
+        <label for="result">Результат:</label><br>
+        <input id="result" name="result" readonly>
+    </div>
 
     <script>
+
+        const error_color = 'bisque';
+
         function checkField( field )
         {
             if( document.getElementById( field ) )
             {
                 let el = document.getElementById( field );
 
-                if( isNaN( el.value ) || !el.value.length )
+                if( el.type == 'text' && isNaN( el.value ) || !el.value.length )
                 {
-                    el.style.background = '#003400';
+                    el.style.background = error_color;
                     return false;
                 }
                 else
@@ -59,12 +83,9 @@
 
         function calc()
         {
-            if(
-                document.getElementById('action') &&
-                document.getElementById('result')
-            )
+            if( document.getElementById('action') && document.getElementById('result') )
             {
-                if( [ 'operand_1', 'operand_2' ].filter(checkField).length == 2 )
+                if( [ 'operand_1', 'operand_2', 'action' ].filter(checkField).length == 3 )
                 {
                     let val1 = parseInt( document.getElementById( 'operand_1' ).value ),
                         val2 = parseInt( document.getElementById( 'operand_2' ).value ),
@@ -82,7 +103,14 @@
                             result.value = val1 * val2;
                             break;
                         case 'divide':
-                            result.value = val1 / val2;
+                            if( val2 != 0 )
+                            {
+                                result.value = val1 / val2;
+                            }
+                            else
+                            {
+                                document.getElementById( 'operand_2' ).style.background = error_color;
+                            }
                             break;
                         case 'percent':
                             result.value = val1 % val2;
