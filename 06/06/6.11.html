@@ -77,13 +77,11 @@
 
                 if( el.type == 'text' && isNaN( el.value ) || !el.value.length )
                 {
-                    //el.setAttribute("class", error_class);
                     el.classList.add(error_class);
                     return false;
                 }
                 else
                 {
-                    //el.setAttribute("class", '');
                     el.classList.remove(error_class);
                     return true;
                 }
@@ -96,10 +94,10 @@
         {
             if( document.getElementById('action') && document.getElementById('result') )
             {
-                if( [ 'operand_1', 'operand_2', 'action' ].filter(checkField).length == 3 )
+                if( [ 'operand_1', 'operand_2', 'action' ].every(checkField) )
                 {
-                    let val1 = parseInt( document.getElementById( 'operand_1' ).value ),
-                        val2 = parseInt( document.getElementById( 'operand_2' ).value ),
+                    let val1 = parseFloat( document.getElementById( 'operand_1' ).value ),
+                        val2 = parseFloat( document.getElementById( 'operand_2' ).value ),
                         result = document.getElementById( 'result' );
 
                     switch( document.getElementById('action').value )
@@ -130,7 +128,7 @@
                             result.value = val1 ** val2;
                             break;
                         default:
-                            result.value = 'Операция не найдена !';
+                            result.value = 'Операція не знайдена !';
                             break;
                     }
                 }
