@@ -59,8 +59,6 @@
         }
         for( let j = 0; j < rows.length; j++ )
         {
-            //console.log(rows[j].length);
-
             if( rows[j].trim().length < minLen )
             {
                 // Пропускаем вставку в резалт массив если меньше 2
@@ -80,15 +78,6 @@
             if( contentArray[i].trim().length >= 10 )
             {
                 let row = contentArray[i].trim().split( "," );
-                // Попытка реализации через backe (неудачнаяя)
-                /*for( j = 0; j < row.length; j++ )
-                {
-                    if( row[j].trim().length < 10 )
-                    {
-                        // Пропускаем вставку в резалт массив
-                        break labels;
-                    }
-                }*/
                 if( checkLength( row, 1 ) )
                 {
                     resultArray.push(
