@@ -69,13 +69,41 @@
 
         const error_class = 'error';
 
-        function checkField( field )
+        function isBigInt( field )
         {
+            let element = document.getElementById( field ),
+                val = element.value;
+
+            return element.flag_is_big_int =  (
+                parseInt(val) == val.substring(0, val.length-1) && val[val.length-1] == 'n'
+            );
+
+            /*switch( field )
+            {
+                case 'operand_1':
+                    return ( parseInt( val ) == val.substring( 0, val.length - 1 ) && val[ val.length - 1 ] == 'n' )
+                    break;
+                case 'operand_2':
+                    return isBigInt( 'operand_1' ) && parseInt( val ) == val.substring( 0, val.length - 1 ) && val[ val.length - 1 ] == 'n';
+                    break;
+            }
+
+            return false;*/
+        }
+
+        function checkField( field, mark = false )
+        {
+
             if( document.getElementById( field ) )
             {
                 let el = document.getElementById( field );
 
-                if( el.type == 'text' && isNaN( el.value ) || !el.value.length )
+                if(
+                    el.type == 'text' &&
+                    (
+                        !isBigInt( field ) && isNaN( el.value )
+                    ) ||
+                    !el.value.length )
                 {
                     el.classList.add(error_class);
                     return false;
@@ -96,9 +124,24 @@
             {
                 if( [ 'operand_1', 'operand_2', 'action' ].every(checkField) )
                 {
-                    let val1 = parseFloat( document.getElementById( 'operand_1' ).value ),
-                        val2 = parseFloat( document.getElementById( 'operand_2' ).value ),
-                        result = document.getElementById( 'result' );
+                    let result = document.getElementById( 'result' );
+
+                    const el1 = document.getElementById( 'operand_1' ),
+                          el2 = document.getElementById( 'operand_2' );
+
+                    let val1 = el1.value,
+                        val2 = el2.value;
+
+                    if ( el1.flag_is_big_int && el2.flag_is_big_int )
+                    {
+                        val1 = BigInt( parseInt(val1) );
+                        val2 = BigInt( parseInt(val2) );
+                    }
+                    else
+                    {
+                        val1 = parseFloat( val1 );
+                        val2 = parseFloat( val2 );
+                    }
 
                     switch( document.getElementById('action').value )
                     {
