@@ -77,18 +77,6 @@
             return element.flag_is_big_int =  (
                 parseInt(val) == val.substring(0, val.length-1) && val[val.length-1] == 'n'
             );
-
-            /*switch( field )
-            {
-                case 'operand_1':
-                    return ( parseInt( val ) == val.substring( 0, val.length - 1 ) && val[ val.length - 1 ] == 'n' )
-                    break;
-                case 'operand_2':
-                    return isBigInt( 'operand_1' ) && parseInt( val ) == val.substring( 0, val.length - 1 ) && val[ val.length - 1 ] == 'n';
-                    break;
-            }
-
-            return false;*/
         }
 
         function checkField( field, mark = false )
@@ -134,8 +122,8 @@
 
                     if ( el1.flag_is_big_int && el2.flag_is_big_int )
                     {
-                        val1 = BigInt( parseInt(val1) );
-                        val2 = BigInt( parseInt(val2) );
+                        val1 = BigInt( val1.substring(0, val1.length-1) );
+                        val2 = BigInt( val2.substring(0, val2.length-1) );
                     }
                     else
                     {
@@ -157,7 +145,7 @@
                         case 'divide':
                             if( val2 != 0 )
                             {
-                                result.value = Math.round((val1 / val2) * 1000) / 1000;
+                                result.value = (val1 / val2);
                             }
                             else
                             {
