@@ -74,8 +74,10 @@
             let element = document.getElementById( field ),
                 val = element.value;
 
-            return element.flag_is_big_int =  (
-                parseInt(val) == val.substring(0, val.length-1) && val[val.length-1] == 'n'
+            return element.flag_is_any_int =  (
+                !isFloat(val) ||
+                (parseInt(val) == val.substring(0, val.length-1) && val[val.length-1] == 'n') ||
+                val > Number.MAX_SAFE_INTEGER    //9007199254740991
             );
         }
 
@@ -106,6 +108,10 @@
             return false;
         }
 
+        function isFloat(n){
+            return !(parseInt(n) == n);
+        }
+
         function calc()
         {
             if( document.getElementById('action') && document.getElementById('result') )
@@ -120,10 +126,10 @@
                     let val1 = el1.value,
                         val2 = el2.value;
 
-                    if ( el1.flag_is_big_int && el2.flag_is_big_int )
+                    if ( el1.flag_is_any_int && el2.flag_is_any_int )
                     {
-                        val1 = BigInt( val1.substring(0, val1.length-1) );
-                        val2 = BigInt( val2.substring(0, val2.length-1) );
+                        val1 = BigInt( val1 );
+                        val2 = BigInt( val2 );
                     }
                     else
                     {
