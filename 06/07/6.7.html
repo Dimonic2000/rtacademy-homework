@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.7</title>
+</head>
+<body>
+<script>
+    /*Змініть вашу функцію capitalize() із завдання #6.6
+     так, щоб вона також успішно працювала з такими
+     містами як:*/
+
+    const city = [
+        '111-2222-33-4444-5555-77',
+        'Київ',
+        'Нью-йорк',
+        'Ріо-де-Жанейро',
+        'Франкфурт-на-Майні',
+        'Сен-Сатюр\'нен-лез-Апт',
+        'Лагард-Д\'фпт',
+    ];
+
+    function changeCapitalization( cityPartName = '', direction = 'lower' )
+    {
+        let firstLetter, otherLetter = '';
+
+        if( direction == 'lower' )
+        {
+            return cityPartName.toLowerCase();
+        }
+        else if( direction == 'upper' )
+        {
+            firstLetter = cityPartName.substring( 0, 1 ).toUpperCase();
+            otherLetter = cityPartName.substring( 1, cityPartName.length ).toLowerCase();
+        }
+
+        return firstLetter + otherLetter;
+    }
+
+    function capitalize( city_name = '' )
+    {
+        const cn_array = city_name.split( "-" );
+        let combine_array = [];
+
+        for( let i = 0; i < cn_array.length; i++ )
+        {
+            if( cn_array[i][1] == "'" )
+            { // случай с апострофом
+                combine_array.push(
+                    changeCapitalization( cn_array[i][0] , 'lower' ) +
+                    "'" +
+                    changeCapitalization( cn_array[i].substring(2, cn_array[i].length), 'upper' )
+                );
+            }
+            else
+            {
+                if(
+                    i === 0 ||                      // первый
+                    i === cn_array.length - 1 ||    // последний
+                    cn_array[ i ].length > 3        // размер > 3
+                )
+                {
+                    combine_array.push( changeCapitalization( cn_array[ i ], 'upper' ) );
+                }
+                else
+                {
+                    combine_array.push( changeCapitalization( cn_array[ i ], 'lower' ) );
+                }
+            }
+        }
+
+        return combine_array.join('-');
+    }
+
+    for( let i = 0; i < city.length; i++ )
+    {
+        let cityNameCapitalized = capitalize( city[i] );
+
+        console.log( cityNameCapitalized );
+    }
+
+</script>
+</body>
+</html>
