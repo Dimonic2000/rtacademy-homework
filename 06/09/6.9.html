@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.3</title>
+</head>
+<body>
+<script>
+    let csvFileContent = `
+    11221,2,3,4
+    Tokyo,35.6850,139.7514,Japan,35676000
+        New York,40.6943,-73.9249,United States,19354922
+        Mexico City,19.4424,-99.1310,Mexico,19028000
+        Mumbai,19.0170,72.8570,India,18978000
+        São Paulo,-23.5587,-46.6250,Brazil,18845000
+        Delhi,28.6700,77.2300,India,15926000
+        Shanghai,31.2165,121.4365,China,14987000
+        Kolkata,22.4950,88.3247,India,14787000
+        Los Angeles,34.1139,-118.4068,United States,12815475
+        Dhaka,23.7231,90.4086,Bangladesh,12797394
+        Buenos Aires,-34.6025,-58.3975,Argentina,12795000
+        Karachi,24.8700,66.9900,Pakistan,12130000
+        Cairo,30.0500,31.2500,Egypt,11893000
+        Rio de Janeiro,-22.9250,-43.2250,Brazil,11748000
+        Ōsaka,34.7500,135.4601,Japan,11294000
+        Beijing,39.9289,116.3883,China,11106000
+        Manila,14.6042,120.9822,Philippines,11100000
+        Moscow,55.7522,37.6155,Russia,10452000
+        Istanbul,41.1050,29.0100,Turkey,10061000
+        Paris,48.8667,2.3333,France,9904000
+        Seoul,37.5663,126.9997,"Korea, South",9796000
+        Lagos,6.4433,3.3915,Nigeria,9466000
+        Jakarta,-6.1744,106.8294,Indonesia,9125000
+        Guangzhou,23.1450,113.3250,China,8829000
+        Chicago,41.8373,-87.6862,United States,8675982
+        London,51.5000,-0.1167,United Kingdom,8567000
+        Lima,-12.0480,-77.0501,Peru,8012000
+        Tehran,35.6719,51.4243,Iran,7873000
+        Kinshasa,-4.3297,15.3150,Congo (Kinshasa),7843000
+        Bogotá,4.5964,-74.0833,Colombia,7772000
+        Shenzhen,22.5524,114.1221,China,7581000
+        Wuhan,30.5800,114.2700,China,7243000
+        Hong Kong,22.3050,114.1850,Hong Kong,7206000
+        Tianjin,39.1300,117.2000,China,7180000
+        Chennai,13.0900,80.2800,India,7163000
+        Taipei,25.0358,121.5683,Taiwan,6900273
+        Bengalūru,12.9700,77.5600,India,6787000
+
+
+        Bangkok,13.7500,100.5166,Thailand,6704000
+
+        `;
+
+    function checkLength( rows, minLen = 2 )
+    {
+        if( rows.length < 5 )
+        {
+            return false;
+        }
+        for( let j = 0; j < rows.length; j++ )
+        {
+            if( rows[j].trim().length < minLen )
+            {
+                // Пропускаем вставку в резалт массив если меньше 2
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function parseCSV( content = '')
+    {
+        let resultArray = [],
+            contentArray = content.split( "\n" )
+
+        for( let i = 0; i < contentArray.length; i++ )
+        {
+            if( contentArray[i].trim().length >= 10 )
+            {
+                let row = contentArray[i].trim().split( "," );
+                if( checkLength( row, 1 ) )
+                {
+                    resultArray.push(
+                        {
+                            "city"      : row[ 0 ].trim().toString(),
+                            "latitude"  : parseFloat( row[ 1 ] ),
+                            "longitude" : parseFloat( row[ 2 ] ),
+                            "country"   : row[ 3 ].trim().toString(),
+                            "population": parseInt( row[ 1 ] )
+                        } );
+                }
+            }
+        }
+
+        return resultArray;
+    }
+
+    let result = parseCSV( csvFileContent );
+    console.log(result);
+
+</script>
+</body>
+</html>
