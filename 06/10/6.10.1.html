@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.10.1</title>
+</head>
+<body>
+<script>
+    /*
+     Напишіть функцію exp(b, e) для обчислення експоненти числа.
+     Примітка: Показник числа говорить про те, скільки разів базове число використовується як множник:
+     8² = 8 x 8 = 64. Тут 8 – основа (base), а 2 – показник ступеня (exponent/power).
+    */
+
+    function exp( base, exponent )
+    {
+        if( exponent > 1 )
+        {
+            return base * exp( base, exponent - 1 );
+        }
+
+        return base;
+    }
+
+    console.log(exp(8, 3));
+    //console.log(exp(1,10));
+    //console.log(exp(100,1000));
+
+
+    const company =
+        {
+            sales: [{name: 'John', salary: 1000}, {name: 'Alice', salary: 500 }],
+            development: {
+                sites: [{name: 'Peter', salary: 2000}, {name: 'Alex', salary: 2100 }],
+                internals: {
+                    department1: [{name: 'Jack', salary: 1700}],
+                    department2: [{name: 'Juliet', salary: 2500}],
+                },
+                r_and_d: [{name: 'Bob', salary: 1000}, {name: 'Mary', salary: 1200}]
+            }
+        };
+
+    function getTotalSalary( rec, total = 0 )
+    {
+        if( Array.isArray(rec) )
+        {
+            for( let i = 0; i < rec.length; i++ )
+            {
+                if( typeof rec[i] == 'object')
+                {
+                    total = getTotalSalary( rec[ i ], total );
+                }
+            }
+        }
+        else
+        {
+            for( let key in rec )
+            {
+                if( typeof rec[key] == 'object')
+                {
+                    total = getTotalSalary( rec[ key ], total );
+                }
+                else if( key == 'salary' )
+                {
+                    total += rec[key];
+                }
+            }
+        }
+
+        return total;
+    }
+
+    let totalSalary = getTotalSalary(company);
+
+    console.log(totalSalary);
+</script>
+</body>
+</html>
