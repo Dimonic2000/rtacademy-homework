@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.12</title>
+</head>
+<body>
+
+    <style>
+
+        div {
+            float: left;
+            margin: 5px;
+        }
+        label
+        {
+            color: gray;
+        }
+        input, select, button
+        {
+            font-family: Arial;
+            font-size: 11px;
+            -moz-border-radius: 15px;
+            border-radius: 5px;
+            padding:5px;
+            border:1px solid gray;
+        }
+        .error
+        {
+            border:1px solid red;
+        }
+        button
+        {
+            width: 75px;
+            background-color: #126bff;
+        }
+
+    </style>
+
+    <div>
+        <label for="operand_1">Операнд1:</label><br>
+        <input id="operand_1" name="operand_1" required>
+    </div>
+    <div>
+        <label for="action">Дiя:</label><br>
+        <select id="action" name="action">
+            <option value="" selected>Оберiть дiю...</option>
+            <option value="plus">+</option>
+            <option value="minus" >-</option>
+            <option value="multiply">*</option>
+            <option value="divide">/</option>
+            <option value="percent">%</option>
+            <option value="degree">**</option>
+        </select>
+    </div>
+    <div>
+        <label for="operand_2">Операнд2:</label><br>
+        <input id="operand_2" name="operand_2" required>
+    </div>
+    <div><br>
+        <button id="do_something" name="do_something">=</button>
+    </div>
+    <div>
+        <label for="result">Результат:</label><br>
+        <input id="result" name="result" readonly>
+    </div>
+
+    <script>
+
+        const error_class = 'error';
+
+        function isBigInt( field )
+        {
+            let element = document.getElementById( field ),
+                val = element.value;
+
+            return element.flag_is_any_int =  (
+                !isFloat(val) ||
+                (parseInt(val) == val.substring(0, val.length-1) && val[val.length-1] == 'n') ||
+                val > Number.MAX_SAFE_INTEGER    //9007199254740991
+            );
+        }
+
+        function checkField( field, mark = false )
+        {
+
+            if( document.getElementById( field ) )
+            {
+                let el = document.getElementById( field );
+
+                if(
+                    el.type == 'text' &&
+                    (
+                        !/^[-+]?[0-9]*[.,]?[0-9]+(?:[eE][-+]?[0-9]+)?$/i.test(el.value)
+                    ) ||
+                    !el.value.length )
+                {
+                    el.classList.add(error_class);
+                    return false;
+                }
+                else
+                {
+                    el.classList.remove(error_class);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function isFloat(n){
+            return !(parseInt(n) == n);
+        }
+
+        function calc()
+        {
+            if( document.getElementById('action') && document.getElementById('result') )
+            {
+                if( [ 'operand_1', 'operand_2', 'action' ].every(checkField) )
+                {
+                    let result = document.getElementById( 'result' );
+
+                    const el1 = document.getElementById( 'operand_1' ),
+                          el2 = document.getElementById( 'operand_2' );
+
+                    let val1 = el1.value,
+                        val2 = el2.value;
+
+                    if ( el1.flag_is_any_int && el2.flag_is_any_int )
+                    {
+                        val1 = BigInt( val1 );
+                        val2 = BigInt( val2 );
+                    }
+                    else
+                    {
+                        val1 = parseFloat( val1 );
+                        val2 = parseFloat( val2 );
+                    }
+
+                    switch( document.getElementById('action').value )
+                    {
+                        case 'plus':
+                            result.value = val1 + val2;
+                            break;
+                        case 'minus':
+                            result.value = val1 - val2;
+                            break;
+                        case 'multiply':
+                            result.value = val1 * val2;
+                            break;
+                        case 'divide':
+                            if( val2 != 0 )
+                            {
+                                result.value = (val1 / val2);
+                            }
+                            else
+                            {
+                                document.getElementById( 'operand_2' ).classList.add(error_class);
+                            }
+                            break;
+                        case 'percent':
+                            result.value = val1 % val2;
+                            break;
+                        case 'degree':
+                            result.value = val1 ** val2;
+                            break;
+                        default:
+                            result.value = 'Операція не знайдена !';
+                            break;
+                    }
+                }
+            }
+        };
+
+
+        // Если есть на странице, то вешаем клик:
+        if( document.getElementById( 'do_something' ) )
+        {
+            document.getElementById( 'do_something' ).onclick = calc;
+        }
+
+    </script>
+</body>
+</html>
