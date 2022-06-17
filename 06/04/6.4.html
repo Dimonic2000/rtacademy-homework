@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.4</title>
+</head>
+<body>
+<script>
+    let age = 15,
+        withParents = true;
+
+    // Переписати цей тернарний запис:
+    let accessAllowed = ( age > 18 ) ? 'Yes' : ( withParents ? 'Yes' : 'No' );
+
+    console.log( 'accessAllowed = ' + accessAllowed );
+
+    if( age > 18 )
+    {
+        accessAllowed = 'Yes';
+    }
+    else if( withParents )
+    {
+        accessAllowed = 'Yes';
+    }
+    else
+    {
+        accessAllowed = 'No';
+    }
+
+    console.log( 'accessAllowed = ' + accessAllowed );
+
+</script>
+</body>
+</html>
