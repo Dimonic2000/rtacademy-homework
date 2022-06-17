@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.8</title>
+</head>
+<body>
+<script>
+    /* Напишіть функцію getRandomInt(), що буде
+     повертати випадкове ціле число в діапазоні від min
+     до max, що будуть її аргументами/параметрами.
+     У випадку якщо min більше max - переверніть їх
+     значення місцями.
+     * Врахуйте, що min до max можуть бути або Integer
+     або Float
+     ** Врахуйте, що min до max можуть бути типу BigInt */
+
+    function isFloat(x) { return !!(x % 1); }
+
+    function getRandomInt( min, max )
+    {
+        if( min > max)
+        {
+            max = [ min, min = max ][ 0 ];
+        }
+
+        if( !isFloat(min) && !isFloat(max) )
+        {
+            return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+        }
+        else
+        {
+            return Math.random() * ( max - min ) + min;
+        }
+    }
+
+    let randomInt = getRandomInt( 1, 3 );
+
+    console.log( 'Випадкове число: ' + randomInt );
+</script>
+</body>
+</html>
