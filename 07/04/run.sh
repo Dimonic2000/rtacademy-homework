@@ -8,3 +8,6 @@ docker rm <ID_контейнера>
 docker images
 #Видаліть образ rtacademy_nginx:1.0
 docker rmi rtacademy_nginx:1.0
+
+# Видалить все, що не запущенно
+docker system prune
