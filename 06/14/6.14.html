@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.14</title>
+</head>
+<body>
+
+    <style>
+
+        div {
+            margin: 5px;
+        }
+        label
+        {
+            color: gray;
+        }
+        input, select, color, button, textarea
+        {
+            font-family: Arial;
+            font-size: 11px;
+            -moz-border-radius: 15px;
+            border-radius: 5px;
+            padding:5px;
+            border:1px solid gray;
+        }
+        .error
+        {
+            border:1px solid red;
+        }
+        button
+        {
+            width: 100px;
+            color: black;
+        }
+
+    </style>
+    <h1>Бронювання залу фотостудii</h1>
+    <form id="form">
+        <div class="container">
+            <div>
+                <label for="firstname">* Прiзвище:</label><br>
+                <input id="firstname" name="firstname" required minlength="2" maxlength="64" placeholder="Введiть прiзвище">
+            </div>
+            <div>
+                <label for="lastname">* Iм'я:</label><br>
+                <input id="lastname" name="lastname" required minlength="2" maxlength="64" placeholder="Введiть iм'я">
+            </div>
+            <div>
+                <label for="email">* Email:</label><br>
+                <input id="email" name="email" required minlength="6" maxlength="255" placeholder="Введiть email">
+            </div>
+
+            <div>
+                <label for="phone">* Телефон:</label><br>
+                <input id="phone" name="phone" required minlength="13" maxlength="13" placeholder="+380000000000">
+            </div>
+            <div>
+                <label for="instagram">Профiль Instagram:</label><br>
+                <input id="instagram" name="instagram" minlength="23" maxlength="255" type="url" pattern="https://.*" placeholder="https://instagram.com">
+            </div>
+            <div>
+                <label for="zal">Зал:</label><br>
+                <select id="zal" name="zal" required>
+                    <option value="" selected>Оберiть зал...</option>
+                    <option value="studiya">Студия 1000грн.</option>
+                    <option value="kino" >Кино студия 900грн.</option>
+                    <option value="porno">Зал для взрослого кино 800грн.</option>
+                    <!--<option value="underground">Зал в подвале</option>
+                    <option value="deti">Детские вечеринки</option>
+                    <option value="sport">Спортзал</option>-->
+                </select>
+            </div>
+
+            <div>
+                <label for="time_start">* Дата i час початку:</label><br>
+                <input id="time_start" name="time_start" type="datetime-local" required max="2023-01-01T00:00">
+            </div>
+            <div>
+                <label for="time_end">* Дата i час кiнця:</label><br>
+                <input id="time_end" name="time_end" type="datetime-local" required max="2023-01-01T00:00">
+            </div>
+            <div>
+                <label for="count">* Кiлькiсть людей в залi:</label><br>
+                <input id="count" name="count" type="number" required min="1" max="10" placeholder="2">
+            </div>
+            <div>
+                <label for="color">Колiр фона:</label><br>
+                <input id="color" name="color" type="color">
+            </div>
+            <div>
+                <label for="comment">Коментар:</label><br>
+                <textarea id="comment" name="comment" rows="4" cols="50">
+                </textarea>
+            </div>
+            <div>
+                <input id="check" name="check" type="checkbox">
+                <label for="check" required>Я погоджуюсь з <a href="#">правилами фотостудii</a></label><br>
+            </div>
+            <div>
+                <button id="do_reset" name="do_reset" type="reset">Очистити</button>
+                <button id="do_something" name="do_something">Надiслати</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        const currentDateTime = () =>
+        {
+            let tzoffset = new Date().getTimezoneOffset() * 60000;
+            let localISOString = new Date( Date.now() - tzoffset )
+                .toISOString()
+                .slice( 0, -1 );
+
+            const datetimeInputString = localISOString.substring(
+                0,
+                ( ( localISOString.indexOf( "T" ) | 0 ) + 6 ) | 0
+            );
+            return datetimeInputString;
+        };
+
+        if( document.getElementById( 'time_start' ) )
+        {
+            document.getElementById( 'time_start' ).value = currentDateTime();
+            document.getElementById( 'time_start' ).min = currentDateTime();
+            document.getElementById( 'time_start' ).max = '2023-01-01T00:00';
+        }
+
+        if( document.getElementById( 'time_end' ) )
+        {
+            document.getElementById( 'time_end' ).value = currentDateTime();
+            document.getElementById( 'time_end' ).min = currentDateTime();
+            document.getElementById( 'time_end' ).max = '2023-01-01T00:00';
+        }
+
+        const error_class = 'error';
+
+        function checkRequired( field )
+        {
+            if( document.getElementById( field ) )
+            {
+                let el = document.getElementById( field );
+
+                if( !el.required ) return !el.required;
+
+                if( !el.value.length )
+                {
+                    el.classList.add(error_class);
+                    return false;
+                }
+                else
+                {
+                    el.classList.remove(error_class);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function calc()
+        {
+            console.log('click');
+            //console.log(document.getElementById('firstname'));
+            //document.getElementById( 'operand_2' ).classList.add(error_class);
+            //if( document.getElementById('firstname') )
+
+            if( [ 'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check' ].every( (field) => document.getElementById( field ) ) )
+            {
+                // помечаем красным все пустые и required
+                [ 'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check' ].map(checkRequired);
+                let element = '';
+                // some ->- replace to every
+                if( [ 'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check' ].some(checkRequired) )
+                {
+                    // ------- firstname -------------
+                    element = document.getElementById( 'firstname' );
+                    if( !( element.value.length > 2 && element.value.length < 64 ) )
+                    {
+                        element.classList.add( error_class );
+                    }
+
+                    // ------- lastname -------------
+                    element = document.getElementById( 'lastname' );
+                    if( !( element.value.length > 2 && element.value.length < 64 ) )
+                    {
+                        element.classList.add( error_class );
+                    }
+
+                    // ------- email -------------
+                    element = document.getElementById( 'email' );
+                    if( !( element.value.length > 6 && element.value.length < 255 ) )
+                    {
+                        element.classList.add( error_class );
+                    }
+
+                    // ------- phone -------------
+                    element = document.getElementById( 'phone' );
+                    if( !( element.value.length == 13 ) )
+                    {
+                        element.classList.add( error_class );
+                    }
+
+                    // ------- instagram -------------
+                    element = document.getElementById( 'instagram' );
+                    if( element.value.length > 0 )
+                    {
+                        if( !( element.value.length > 23 && element.value.length < 255 ) )
+                        {
+                            element.classList.add( error_class );
+                        }
+                    }
+
+                    // ------- date -------------
+                    const start = document.getElementById( 'time_start' ),
+                        end = document.getElementById( 'time_end' ),
+                        start_ts = Date.parse( start.value ),
+                        end_ts = Date.parse( end.value );
+
+                    let now_ = new Date();
+
+                    //Дата і час початку не має бути раніше поточної години
+                    //Дата і час початку не має бути більшою за дату і час кінця
+                    //Мінімальне замовлення має бути кратне одній годині
+                    console.log(start_ts - end_ts);
+
+                    if( start_ts < now_ || end_ts < now_ || start_ts > end_ts )
+                    {
+                        start.classList.add( error_class );
+                        end.classList.add( error_class );
+                    }
+                    else
+                    {
+                        start.classList.remove( error_class );
+                        end.classList.remove( error_class );
+                    }
+                }
+            }
+            else
+            {
+                alert('Не всi поля присутні: DevTools forever !');
+            }
+
+            if( document.getElementById('time_start') && document.getElementById('time_end') )
+            {
+                const start     = document.getElementById( 'time_start' ),
+                      end       = document.getElementById( 'time_end' ),
+                      result    = document.getElementById( 'result_date' ),
+                      start_ts  = Date.parse(start.value),
+                      end_ts    = Date.parse(end.value);
+
+                if( start_ts > end_ts )
+                {
+                    start.classList.add(error_class);
+                    end.classList.add(error_class);
+                }
+                else
+                {
+                    start.classList.remove(error_class);
+                    end.classList.remove(error_class);
+                }
+            }
+        };
+
+
+        // Если есть на странице, то вешаем клик:
+        if( document.getElementById( 'do_something' ) )
+        {
+            document.getElementById( 'do_something' ).onclick = calc;
+        }
+
+        function logSubmit(event) {
+            alert('Form Submitted! Time stamp');
+            event.preventDefault();
+        }
+
+        const form = document.getElementById('form');
+        form.addEventListener('submit', logSubmit);
+    </script>
+</body>
+</html>
