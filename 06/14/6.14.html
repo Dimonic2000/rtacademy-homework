@@ -64,7 +64,7 @@
             </li>
         </ul>
     </div>
-    <form id="form">
+    <!--<form id="form">-->
         <div class="container">
             <div>
                 <label for="firstname">* Прiзвище:</label><br>
@@ -130,7 +130,7 @@
                 <button id="do_something" name="do_something">Надiслати</button>
             </div>
         </div>
-    </form>
+    <!--</form>-->
 
     <script>
 
@@ -278,6 +278,8 @@
         {
             error_msg = [];
 
+            console.log('calc')
+
             //if( [ 'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check' ].every( (field) => document.getElementById( field ) ) )
 
             if( [ 'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check' ].every( clearError ) )
@@ -346,8 +348,6 @@
                         {
                             setError( 'instagram', 'Значення для поля %field% занадто довге (максимально можливе довжина <b>255<b> символи)');
                         }
-                        console.log(element.value);
-                        console.log(/^((http|https):\/\/)?www\.([A-z]+)\.([A-z]{2,})$/i.test(element.value));
 
                         if( !/^((http|https):\/\/)?www\.([A-z]+)\.([A-z]{2,})$/i.test(element.value) )
                         {
@@ -405,13 +405,24 @@
                         {
                             setError( 'time_end', 'Значення для поля %field% не має бути раніше поточної години (' + currentDateTime() + ')' );
                         }
-                    }
 
-                    console.log(start_ts - end_ts);
+                        if( end_ts < start_ts )
+                        {
+                            setError( 'time_start', 'Значення для поля %field% не має бути більшою за дату і час кінця (' + start.value + ')' );
+                        }
 
-                    if( start_ts - end_ts )
-                    {
-                        setError( 'time_end', 'Значення для поля %field% мінімальне замовлення має бути кратне одній годині (' + (start_ts - end_ts) + ')');
+                        let diff = end_ts - start_ts;
+                        console.log(diff); //86400
+                        diff /= 1000;
+
+                        let hours = Math.round(diff / 3600),
+                            minute = Math.round(diff / 60 % 60);
+
+                        if( minute > 0 )
+                        {
+                            setError( 'time_start', 'Значення для поля %field% - мінімальне замовлення має бути кратне одній годині (у Вас - '+hours+' год. '+ minute +' хв.)' );
+                            setError( 'time_end', 'Значення для поля %field% - мінімальне замовлення має бути кратне одній годині (у Вас - '+hours+' год. '+ minute +' хв.)' );
+                        }
                     }
 
                     // ------- count -------------
@@ -443,7 +454,7 @@
             document.getElementById( 'do_something' ).onclick = calc;
         }
 
-        function logSubmit(event) {
+        /*function logSubmit(event) {
             alert('Form Submitted Success!');
             event.preventDefault();
         }
@@ -451,7 +462,7 @@
         if( document.getElementById('form') )
         {
             document.getElementById( 'form' ).addEventListener( 'submit', logSubmit );
-        }
+        }*/
 
     </script>
 </body>
