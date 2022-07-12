@@ -245,10 +245,6 @@
                 {
                     error_msg.push( msg.replace('%field%', '<b>'+label_inner+'</b>') );
                 }
-                else
-                {
-                    error_msg.push(  );
-                }
             }
             return false;
         }
@@ -353,7 +349,7 @@
                             setError( 'instagram', 'Значення для поля %field% занадто довге (максимально можливе довжина <b>255<b> символи)');
                         }
 
-                        if( !/^((http|https):\/\/)?www\.([A-z]+)\.([A-z]{2,})$/i.test(element.value) )
+                        if( !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(element.value) )
                         {
                             setError( 'instagram', 'Значення для поля %field% не валідне');
                         }
