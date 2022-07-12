@@ -127,7 +127,7 @@
             </div>
             <div>
                 <button id="do_reset" name="do_reset" type="reset">Очистити</button>
-                <button id="do_something" name="do_something">Надiслати</button>
+                <button id="do_something" name="do_something" disabled>Надiслати</button>
             </div>
         </div>
     <!--</form>-->
@@ -324,6 +324,10 @@
                         setError( 'email', 'Значення для поля %field% занадто довге (максимально можливе довжина <b>255<b> символи)');
                     }
 
+                    if( !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(element.value) )
+                    {
+                        setError( 'email', 'Значення для поля %field% не валідне');
+                    }
                     // ------- phone -------------
                     element = document.getElementById( 'phone' );
                     if( element.value.length != 13 )
@@ -412,7 +416,6 @@
                         }
 
                         let diff = end_ts - start_ts;
-                        console.log(diff); //86400
                         diff /= 1000;
 
                         let hours = Math.round(diff / 3600),
@@ -436,6 +439,13 @@
                         setError( 'count', 'Значення для поля %field% занадто довге (максимально можливе <b>10<b> людей)');
                     }
 
+                    // ------- count -------------
+                    element = document.getElementById( 'check' );
+                    if( !element.value )
+                    {
+                        setError( 'check', 'Значення для поля %field% необхідно "Погодитись з правилами фотостудії"');
+                    }
+
                 }
             }
             else
@@ -445,7 +455,34 @@
 
             setErrorMessage( error_msg );
 
+            if( error_msg.length == 0)
+            {
+                //Тут расчет стоимости...
+            }
+
         };
+
+        function handleChange( checkbox )
+        {
+            console.log('handleChange');
+
+            if( document.getElementById( 'do_something' ) )
+            {
+                if( checkbox.checked == true )
+                {
+                    document.getElementById( 'do_something' ).removeAttribute("disabled");
+                }
+                else
+                {
+                    document.getElementById( 'do_something' ).setAttribute( "disabled", true );
+                }
+            }
+        }
+
+        if( document.getElementById( 'check' ) )
+        {
+            document.getElementById( 'check' ).onchange = handleChange;
+        }
 
 
         // Если есть на странице, то вешаем клик:
