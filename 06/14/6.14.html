@@ -455,26 +455,26 @@
 
             setErrorMessage( error_msg );
 
-            if( error_msg.length == 0)
+            if( !error_msg.length )
             {
                 //Тут расчет стоимости...
             }
 
         };
 
-        function handleChange( checkbox )
+        function handleChange( )
         {
-            console.log('handleChange');
+            let checkbox = document.getElementById( 'check' );
 
             if( document.getElementById( 'do_something' ) )
             {
-                if( checkbox.checked == true )
-                {
+
+                if( checkbox.checked )                {
                     document.getElementById( 'do_something' ).removeAttribute("disabled");
                 }
                 else
                 {
-                    document.getElementById( 'do_something' ).setAttribute( "disabled", true );
+                    document.getElementById( 'do_something' ).setAttribute( "disabled", "disabled" );
                 }
             }
         }
