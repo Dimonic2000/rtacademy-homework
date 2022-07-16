@@ -35,6 +35,13 @@
             color: yellow;
             padding:5px;
         }
+        .div_result
+        {
+            display: compact;
+            background-color: green;
+            color: yellow;
+            padding:5px;
+        }
         .div_error_field
         {
             color: red;
@@ -55,6 +62,9 @@
 
     </style>
     <h1>Бронювання залу фотостудii</h1>
+    <div class="div_result hide" >
+
+    </div>
     <div class="div_error hide" >
         <ul>
             <li>
@@ -95,9 +105,9 @@
                 <label for="zal">Зал:</label><br>
                 <select id="zal" name="zal" required onchange="check()">
                     <option value="" selected>Оберiть зал...</option>
-                    <option value="studiya">Студия 1000грн.</option>
-                    <option value="kino" >Кино студия 900грн.</option>
-                    <option value="sex">Зал для взрослого кино 800грн.</option>
+                    <option value="1000">Студия 1000грн.</option>
+                    <option value="900" >Кино студия 900грн.</option>
+                    <option value="800">Зал для взрослого кино 800грн.</option>
                     <!--<option value="underground">Зал в подвале</option>
                     <option value="deti">Детские вечеринки</option>
                     <option value="sport">Спортзал</option>-->
@@ -131,7 +141,7 @@
             </div>
             <div>
                 <!--<button id="do_reset" name="do_reset" type="reset">Очистити</button>-->
-                <button id="do_something" name="do_something" >Надiслати</button> <!--disabled-->
+                <button id="do_something" name="do_something" disabled>Надiслати</button>
             </div>
         </div>
     <!--</form>-->
@@ -386,7 +396,7 @@
                     element = document.getElementById( 'zal' );
                     if( element.value.length > 0 )
                     {
-                        if( !/^(studiya)|(kino)|(sex)$/i.test( element.value ) )
+                        if( !/^(1000)|(900)|(800)$/i.test( element.value ) )
                         {
                             setError( 'zal', 'Значення для поля %field% не валідне' );
                         }
@@ -492,6 +502,47 @@
             if( !error_msg.length )
             {
                 //Тут расчет стоимости...
+                // cost_zal = [ 1000, 900, 800 ],
+
+                const count = document.getElementById( 'count' ).value,
+                    zal = document.getElementById( 'zal' ).value;
+                let cost = 0;
+
+                // ------- date -------------
+                const start = document.getElementById( 'time_start' ),
+                    end = document.getElementById( 'time_end' ),
+                    start_ts = Date.parse( start.value ),
+                    end_ts = Date.parse( end.value );
+
+                let hours = Math.round( ( end_ts - start_ts ) /1000 / 3600 );
+
+                if( count > 3 )
+                {
+                    cost = hours * 50;
+                }
+                else
+                {
+                    cost = hours * zal;
+                }
+
+
+                let div_result = document.getElementsByClassName( 'div_result' )[ 0 ];
+
+                div_result.innerHTML = '';
+                div_result.innerText = '';
+                div_result.textContent = '';
+
+                while (div_result.firstChild)
+                {
+                    div_result.removeChild(div_result.firstChild);
+                }
+
+                let ul = div_result.appendChild( document.createElement( 'ul' ) );
+                let li = document.createElement( 'li' );
+                li.innerHTML = 'Вартість оренди залу:' + cost +' грн.';
+                ul.append(li);
+                div_result.classList.add( 'show' );
+                div_result.classList.remove('hide');
             }
 
         };
