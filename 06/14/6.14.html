@@ -356,7 +356,7 @@
                         setError( 'email', 'Значення для поля %field% занадто довге (максимально можливе довжина <b>255<b> символи)' );
                     }
 
-                    if( !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test( element.value ) )
+                    if( !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test( element.value.trim() ) )
                     {
                         setError( 'email', 'Значення для поля %field% не валідне' );
                     }
@@ -367,7 +367,7 @@
                         setError( 'phone', 'Довжина значення для поля %field% можливе тiльки довжиною <b>13</b> символiв' );
                     }
 
-                    if( !/^\+38(\d){10}$/i.test( element.value ) )
+                    if( !/^\+38(\d){10}$/i.test( element.value.trim() ) )
                     {
                         setError( 'phone', 'Значення для поля %field% не валідне' );
                     }
@@ -396,7 +396,7 @@
                     element = document.getElementById( 'zal' );
                     if( element.value.length > 0 )
                     {
-                        if( !/^(1000)|(900)|(800)$/i.test( element.value ) )
+                        if( !/^(1000)|(900)|(800)$/i.test( element.value.trim() ) )
                         {
                             setError( 'zal', 'Значення для поля %field% не валідне' );
                         }
