@@ -124,7 +124,7 @@
             </div>
             <div>
                 <label for="count">* Кiлькiсть людей в залi:</label><br>
-                <input id="count" name="count" type="number" required min="1" max="10" placeholder="2" onchange="check()">
+                <input id="count" name="count" type="number" required min="1" max="10" onchange="check()">
             </div>
             <div>
                 <label for="color">Колiр фона:</label><br>
@@ -287,7 +287,7 @@
 
                 //if( !el.required ) return !el.required;
 
-                if( !el.value.length )
+                if( !el.value.trim().length )
                 {
                     return setError(field, 'Поле %field% - є обов\'язковим для заповнення');
                 }
@@ -327,7 +327,7 @@
                     element = document.getElementById( 'firstname' );
                     if( element.value.length < 2 )
                     {
-                        setError( 'firstname', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>2</b> символи' );
+                        setError( 'firstname', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>2</b> символи)' );
                     }
                     if( element.value.length > 64 )
                     {
@@ -338,7 +338,7 @@
                     element = document.getElementById( 'lastname' );
                     if( element.value.length < 2 )
                     {
-                        setError( 'lastname', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>2</b> символи' );
+                        setError( 'lastname', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>2</b> символи)' );
                     }
                     if( element.value.length > 64 )
                     {
@@ -349,7 +349,7 @@
                     element = document.getElementById( 'email' );
                     if( element.value.length < 6 )
                     {
-                        setError( 'email', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>6</b> символи' );
+                        setError( 'email', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>6</b> символи)' );
                     }
                     if( element.value.length > 255 )
                     {
@@ -378,7 +378,7 @@
                     {
                         if( element.value.length < 23 )
                         {
-                            setError( 'instagram', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>23</b> символи' );
+                            setError( 'instagram', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>23</b> символи)' );
                         }
                         if( element.value.length > 255 )
                         {
@@ -464,7 +464,7 @@
                     element = document.getElementById( 'count' );
                     if( element.value < 1 )
                     {
-                        setError( 'count', 'Значення для поля %field% занадто коротке (мінімально можливе <b>1</b> людина' );
+                        setError( 'count', 'Значення для поля %field% занадто коротке (мінімально можливе <b>1</b> людина)' );
                     }
                     if( element.value > 10 )
                     {
