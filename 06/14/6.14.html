@@ -281,6 +281,7 @@
 
         function checkRequired( field )
         {
+            console.log(field);
             if( document.getElementById( field ) )
             {
                 let el = document.getElementById( field );
@@ -314,13 +315,16 @@
                 'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check'
             ].every( clearError ) )
             {
+
                 let element = '';
                 // помечаем красным все пустые и required
                 if(
                     [
                         'firstname', 'lastname', 'email', 'phone', 'zal', 'time_start', 'time_end', 'count'
-                    ].map( checkRequired ).length ===
-                    [ 'firstname', 'lastname', 'email', 'phone', 'zal', 'time_start', 'time_end', 'count' ].length
+                    ].filter( checkRequired ).length ===
+                    [
+                        'firstname', 'lastname', 'email', 'phone', 'zal', 'time_start', 'time_end', 'count'
+                    ].length
                 )
                 {
                     // ------- firstname -------------
@@ -385,7 +389,7 @@
                             setError( 'instagram', 'Значення для поля %field% занадто довге (максимально можливе довжина <b>255<b> символи)' );
                         }
 
-                        if( !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test( element.value ) )
+                        if( !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test( element.value.trim() ) )
                         {
                             setError( 'instagram', 'Значення для поля %field% не валідне' );
                         }
