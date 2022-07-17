@@ -244,6 +244,14 @@
 
         function clearError( field )
         {
+            // Удаляем все элементы с классом div_error_field
+            Array.from(document.getElementsByClassName('div_error_field')).forEach(
+                err_div =>
+                {
+                    err_div.remove();
+                }
+            );
+
             if( document.getElementById( field ) )
             {
                 document.getElementById( field ).classList.remove( error_class );
@@ -302,18 +310,13 @@
 
         function check()
         {
-            if( first_check_flag ) return;
-
             error_msg = [];
-
-            //console.log('calc')
-
-            //if( [ 'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check' ].every( (field) => document.getElementById( field ) ) )
 
             if( [
                 'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check'
             ].every( clearError ) )
             {
+                if( first_check_flag ) return;
 
                 let element = '';
                 // помечаем красным все пустые и required
