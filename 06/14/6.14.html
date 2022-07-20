@@ -54,7 +54,7 @@
         {
             display: none;
         }
-        button
+        button, input[type=reset]
         {
             width: 200px;
             color: black;
@@ -78,32 +78,32 @@
             </li>
         </ul>
     </div>
-    <!--<form id="form">-->
+    <form id="form">
         <div class="container">
             <div>
                 <label for="firstname">* Прiзвище:</label><br>
-                <input id="firstname" name="firstname" required minlength="2" maxlength="64" placeholder="Введiть прiзвище" onchange="check()">
+                <input id="firstname" name="firstname" required minlength="2" maxlength="64" placeholder="Введiть прiзвище">
             </div>
             <div>
                 <label for="lastname">* Iм'я:</label><br>
-                <input id="lastname" name="lastname" required minlength="2" maxlength="64" placeholder="Введiть iм'я" onchange="check()">
+                <input id="lastname" name="lastname" required minlength="2" maxlength="64" placeholder="Введiть iм'я">
             </div>
             <div>
                 <label for="email">* Email:</label><br>
-                <input id="email" name="email" required minlength="6" maxlength="255" placeholder="Введiть email" onchange="check()">
+                <input id="email" name="email" required minlength="6" maxlength="255" placeholder="Введiть email">
             </div>
 
             <div>
                 <label for="phone">* Телефон:</label><br>
-                <input id="phone" name="phone" required minlength="13" maxlength="13" placeholder="+380000000000" onchange="check()">
+                <input id="phone" name="phone" required minlength="13" maxlength="13" placeholder="+380000000000">
             </div>
             <div>
                 <label for="instagram">Профiль Instagram:</label><br>
-                <input id="instagram" name="instagram" minlength="23" maxlength="255" type="url" pattern="https://.*" placeholder="https://instagram.com" onchange="check()">
+                <input id="instagram" name="instagram" minlength="23" maxlength="255" type="url" pattern="https://.*" placeholder="https://instagram.com">
             </div>
             <div>
                 <label for="zal">Зал:</label><br>
-                <select id="zal" name="zal" required onchange="check()">
+                <select id="zal" name="zal" required>
                     <option value="" selected>Оберiть зал...</option>
                     <option value="1000">Студия 1000грн.</option>
                     <option value="900" >Кино студия 900грн.</option>
@@ -116,15 +116,15 @@
 
             <div>
                 <label for="time_start">* Дата i час початку:</label><br>
-                <input id="time_start" name="time_start" type="datetime-local" required max="2023-01-01T00:00" onchange="check()">
+                <input id="time_start" name="time_start" type="datetime-local" required max="2023-01-01T00:00">
             </div>
             <div>
                 <label for="time_end">* Дата i час кiнця:</label><br>
-                <input id="time_end" name="time_end" type="datetime-local" required max="2023-01-01T00:00" onchange="check()">
+                <input id="time_end" name="time_end" type="datetime-local" required max="2023-01-01T00:00">
             </div>
             <div>
                 <label for="count">* Кiлькiсть людей в залi:</label><br>
-                <input id="count" name="count" type="number" required min="1" max="10" onchange="check()">
+                <input id="count" name="count" type="number" required min="1" max="10">
             </div>
             <div>
                 <label for="color">Колiр фона:</label><br>
@@ -140,11 +140,12 @@
                 <label for="check" required>Я погоджуюсь з <a href="#">правилами фотостудii</a></label><br>
             </div>
             <div>
-                <!--<button id="do_reset" name="do_reset" type="reset">Очистити</button>-->
+                <!--<button id="do_reset" name="do_reset" type="reset">Очистити</button> -->
+                <input type='reset' value='Очистити'/>
                 <button id="do_something" name="do_something" disabled>Надiслати</button>
             </div>
         </div>
-    <!--</form>-->
+    </form>
 
     <script>
 
@@ -308,7 +309,7 @@
             return false;
         }
 
-        function check()
+        function checked()
         {
             error_msg = [];
 
@@ -320,7 +321,7 @@
 
                 let element = '';
                 // помечаем красным все пустые и required
-                if(
+                if( true ||
                     [
                         'firstname', 'lastname', 'email', 'phone', 'zal', 'time_start', 'time_end', 'count'
                     ].filter( checkRequired ).length ===
@@ -453,11 +454,36 @@
                             setError( 'time_start', 'Значення для поля %field% не має бути більшою за дату і час кінця (' + start.value + ')' );
                         }
 
-                        let diff = end_ts - start_ts;
+                        /*let interval = end_ts - start_ts;
+                        interval /= 1000;
+                        let day, hour, minute;
+                        day = Math.round(interval / 60 / 60 / 24);
+                        hour = Math.round(interval / 60 / 60 % 24);
+                        minute = Math.round(interval / 60 % 60);*/
+
+                        let start_date = start.value.slice(0,10),
+                            end_date = end.value.slice(0,10),
+                            diff = end_ts - start_ts;
                         diff /= 1000;
 
-                        let hours = Math.round( diff / 3600 ),
+                        let day = Math.round( diff / 86400 ),
+                            hours = Math.round( diff / 3600 ),
                             minute = Math.round( diff / 60 % 60 );
+
+                        console.log([ day, hours, minute ]);
+
+                        console.log(start_ts);
+                        console.log( start_date + 'T21:00:00 - ' + Date.parse( start_date + 'T21:00:00'));
+                        console.log( start_date + 'T00:00:00 - ' + Date.parse( start_date + 'T00:00:00'));
+                        console.log( start_date + 'T08:00:00 - ' + Date.parse( start_date + 'T08:00:00'));
+
+                        if(
+                            start_ts < Date.parse( start_date + 'T21:00:00') &&
+                            start_ts >= Date.parse( start_date + 'T08:00:00')
+                        )
+                        {
+                            console.log('Старт в промежутке: 08 -- 21');
+                        }
 
                         if( minute > 0 )
                         {
@@ -503,7 +529,7 @@
         {
             first_check_flag = false;
 
-            check();
+            checked();
 
             if( !error_msg.length )
             {
@@ -524,7 +550,7 @@
 
                 if( count > 3 )
                 {
-                    cost = hours * 50;
+                    cost = count * 50;
                 }
                 else
                 {
@@ -550,7 +576,7 @@
 
                 let ul = div_result.appendChild( document.createElement( 'ul' ) );
                 let li = document.createElement( 'li' );
-                li.innerHTML = 'Вартість оренди залу:' + cost +' грн.';
+                li.innerHTML = 'Вартість оренди залу: ' + cost +' грн.';
                 ul.append(li);
                 div_result.classList.add( 'show' );
                 div_result.classList.remove('hide');
@@ -575,16 +601,26 @@
             }
         }
 
-        if( document.getElementById( 'check' ) )
-        {
-            document.getElementById( 'check' ).onchange = handleChange;
-        }
-
-
         // Если есть на странице, то вешаем клик:
         if( document.getElementById( 'do_something' ) )
         {
             document.getElementById( 'do_something' ).onclick = calc;
+        }
+
+        [
+            'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment'
+        ].some( function( element )
+            {
+                if( document.getElementById( element ) )
+                {
+                    document.getElementById( element ).onchange = checked;
+                }
+            }
+        );
+
+        if( document.getElementById( 'check' ) )
+        {
+            document.getElementById( 'check' ).onchange = handleChange;
         }
 
         /*function logSubmit(event) {
