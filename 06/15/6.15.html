@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.12</title>
+</head>
+<body>
+
+    <div>
+        <label for="action">Дiя:</label><br>
+        <select id="action" name="action">
+            <option value="" selected>Оберiть дiю...</option>
+            <option value="plus">+</option>
+            <option value="minus" >-</option>
+            <option value="multiply">*</option>
+            <option value="divide">/</option>
+            <option value="percent">%</option>
+            <option value="degree">**</option>
+        </select>
+    </div>
+
+
+    <script>
+
+        function reqListener () {
+            console.log(this.responseText);
+        }
+
+        var oReq = new XMLHttpRequest();
+        oReq.onload = reqListener;
+        oReq.open("get", "https://rtacademy.net/v3/countries.json", true);
+        oReq.send();
+
+    </script>
+</body>
+</html>
