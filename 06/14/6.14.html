@@ -90,12 +90,12 @@
             </div>
             <div>
                 <label for="email">* Email:</label><br>
-                <input id="email" name="email" required minlength="6" maxlength="255" placeholder="Введiть email">
+                <input id="email" value="dimonic@gmail.com" name="email" required minlength="6" maxlength="255" placeholder="Введiть email">
             </div>
 
             <div>
                 <label for="phone">* Телефон:</label><br>
-                <input id="phone" name="phone" required minlength="13" maxlength="13" placeholder="+380000000000">
+                <input id="phone" name="phone" value="+380679636432" required minlength="13" maxlength="13" placeholder="+380000000000">
             </div>
             <div>
                 <label for="instagram">Профiль Instagram:</label><br>
@@ -454,36 +454,11 @@
                             setError( 'time_start', 'Значення для поля %field% не має бути більшою за дату і час кінця (' + start.value + ')' );
                         }
 
-                        /*let interval = end_ts - start_ts;
-                        interval /= 1000;
-                        let day, hour, minute;
-                        day = Math.round(interval / 60 / 60 / 24);
-                        hour = Math.round(interval / 60 / 60 % 24);
-                        minute = Math.round(interval / 60 % 60);*/
-
-                        let start_date = start.value.slice(0,10),
-                            end_date = end.value.slice(0,10),
-                            diff = end_ts - start_ts;
+                        let diff = end_ts - start_ts;
                         diff /= 1000;
 
-                        let day = Math.round( diff / 86400 ),
-                            hours = Math.round( diff / 3600 ),
+                        let hours = Math.round( diff / 3600 ),
                             minute = Math.round( diff / 60 % 60 );
-
-                        console.log([ day, hours, minute ]);
-
-                        console.log(start_ts);
-                        console.log( start_date + 'T21:00:00 - ' + Date.parse( start_date + 'T21:00:00'));
-                        console.log( start_date + 'T00:00:00 - ' + Date.parse( start_date + 'T00:00:00'));
-                        console.log( start_date + 'T08:00:00 - ' + Date.parse( start_date + 'T08:00:00'));
-
-                        if(
-                            start_ts < Date.parse( start_date + 'T21:00:00') &&
-                            start_ts >= Date.parse( start_date + 'T08:00:00')
-                        )
-                        {
-                            console.log('Старт в промежутке: 08 -- 21');
-                        }
 
                         if( minute > 0 )
                         {
@@ -533,9 +508,7 @@
 
             if( !error_msg.length )
             {
-                //Тут расчет стоимости...
-                // cost_zal = [ 1000, 900, 800 ],
-
+                //расчет стоимости...
                 const count = document.getElementById( 'count' ).value,
                     zal = document.getElementById( 'zal' ).value;
                 let cost = 0;
@@ -546,6 +519,23 @@
                     start_ts = Date.parse( start.value ),
                     end_ts = Date.parse( end.value );
 
+                //Ночные часы (расчет)
+                let i = start_ts,
+                    hour = -1,
+                    night_hour = 0;
+
+                while( i < end_ts )
+                {
+                    hour = (new Date(i)).getHours();
+
+                    if( !( hour > 8 && hour < 21) )
+                    {
+                        night_hour ++;
+                    }
+
+                    i += 3600000;
+                }
+
                 let hours = Math.round( ( end_ts - start_ts ) /1000 / 3600 );
 
                 if( count > 3 )
@@ -554,14 +544,19 @@
                 }
                 else
                 {
-                    cost = hours * zal;
+                    cost = (hours * zal) + ( night_hour * ( zal / 2 ) );
                 }
 
-                //Ночные часы = ((количество дней между сегодняшним и последним днем) * 11) + (количество ночных часов сегодня) + (количество ночных часов в последний день)
+                cost = Math.round( cost );
 
-                //console.log(hours);
-                //console.log(count);
-                //console.log(cost);
+                if( cost === NaN )
+                {
+                    cost = 'Вартість оренди розрахувати неможливо';
+                }
+                else
+                {
+                    cost = 'Вартість оренди залу: ' + cost + ' грн.';
+                }
 
                 let div_result = document.getElementsByClassName( 'div_result' )[ 0 ];
 
@@ -576,7 +571,7 @@
 
                 let ul = div_result.appendChild( document.createElement( 'ul' ) );
                 let li = document.createElement( 'li' );
-                li.innerHTML = 'Вартість оренди залу: ' + cost +' грн.';
+                li.innerHTML = cost;
                 ul.append(li);
                 div_result.classList.add( 'show' );
                 div_result.classList.remove('hide');
@@ -590,8 +585,8 @@
 
             if( document.getElementById( 'do_something' ) )
             {
-
-                if( checkbox.checked )                {
+                if( checkbox.checked )
+                {
                     document.getElementById( 'do_something' ).removeAttribute("disabled");
                 }
                 else
@@ -601,7 +596,6 @@
             }
         }
 
-        // Если есть на странице, то вешаем клик:
         if( document.getElementById( 'do_something' ) )
         {
             document.getElementById( 'do_something' ).onclick = calc;
@@ -623,15 +617,10 @@
             document.getElementById( 'check' ).onchange = handleChange;
         }
 
-        /*function logSubmit(event) {
-            alert('Form Submitted Success!');
-            event.preventDefault();
-        }
-
         if( document.getElementById('form') )
         {
-            document.getElementById( 'form' ).addEventListener( 'submit', logSubmit );
-        }*/
+            document.getElementById( 'form' ).addEventListener( 'submit', ( event ) => event.preventDefault() );
+        }
 
     </script>
 </body>
