@@ -90,12 +90,12 @@
             </div>
             <div>
                 <label for="email">* Email:</label><br>
-                <input id="email" value="dimonic@gmail.com" name="email" required minlength="6" maxlength="255" placeholder="Введiть email">
+                <input id="email" name="email" required minlength="6" maxlength="255" placeholder="Введiть email">
             </div>
 
             <div>
                 <label for="phone">* Телефон:</label><br>
-                <input id="phone" name="phone" value="+380679636432" required minlength="13" maxlength="13" placeholder="+380000000000">
+                <input id="phone" name="phone" required minlength="13" maxlength="13" placeholder="+380000000000">
             </div>
             <div>
                 <label for="instagram">Профiль Instagram:</label><br>
@@ -290,23 +290,20 @@
 
         function checkRequired( field )
         {
-            if( document.getElementById( field ) )
+            let el = document.getElementById( field );
+
+            if( !el ) return false;
+
+            /*if( !el.value.trim().length )
             {
-                let el = document.getElementById( field );
-
-                //if( !el.required ) return !el.required;
-
-                if( !el.value.trim().length )
-                {
-                    return setError(field, 'Поле є обов\'язковим для заповнення');
-                }
-                else
-                {
-                    return true;
-                }
+                return ;
             }
-
-            return false;
+            else
+            {
+                return true;
+            }*/
+            //
+            return ( !el.value.trim().length ? setError(field, 'Поле є обов\'язковим для заповнення') : true );
         }
 
         function checked()
@@ -317,10 +314,10 @@
                 'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check'
             ].every( clearError ) )
             {
-                if( first_check_flag ) return;
+                if( first_check_flag ) return; // Если ни разу не нажимали на кнопку расчитать, то не валидируем на потерю фокуса
 
                 let element = '';
-                // помечаем красным все пустые и required
+                // в первую очередь помечаем красным все пустые и required
                 if( //true ||
                     [
                         'firstname', 'lastname', 'email', 'phone', 'zal', 'time_start', 'time_end', 'count'
