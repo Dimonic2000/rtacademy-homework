@@ -535,13 +535,11 @@
 
                 let hours = Math.round( ( end_ts - start_ts ) /1000 / 3600 );
 
+                cost = (hours * zal) + ( night_hour * ( zal / 2 ) );
+
                 if( count > 3 )
                 {
-                    cost = count * 50;
-                }
-                else
-                {
-                    cost = (hours * zal) + ( night_hour * ( zal / 2 ) );
+                    cost += count * 50;
                 }
 
                 cost = Math.round( cost );
