@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="utf-8">
-    <title>Завдання 6.12</title>
+    <title>Завдання AJAX 6.12</title>
 </head>
 <body>
 
@@ -22,15 +22,62 @@
 
     <script>
 
-        function reqListener () {
-            console.log(this.responseText);
-        }
+        // AJAX: Приклад на XMLHttpRequest
 
-        var oReq = new XMLHttpRequest();
-        oReq.onload = reqListener;
-        oReq.open("get", "https://rtacademy.net/v3/countries.json", true);
+        let oReq = new XMLHttpRequest();
+        oReq.open("get", "countries.json", true);
         oReq.send();
 
+        oReq.onload = function()
+        {
+            if( oReq.status == 200 )
+            {
+                console.log( oReq.response );
+            }
+            else
+            {
+                console.error( 'Сталася помилка ' + oReq.status + ': ' + oReq.statusText );
+            }
+        };
+
+        //AJAX: Приклад з використанням fetch()
+        (async function() {
+            // GET-запит для URL /v3/countries.json
+            let response = await fetch( 'countries.json' );
+
+            if( response.ok ) // HTTP = 200, все ОК
+            {
+                let jsonContents = await response.json(); // читаємо відповідь в форматі JSON
+                console.log( jsonContents ); // відображаємо отримані дані з сервера в консолі
+                // подальший код обробки результатів відповіді повинен бути тут
+
+            }
+            else
+            { // HTTP не 200, обробляємо як помилку
+                console.error( 'Сталася помилка ' + response.status + ': ' + response.statusText );
+            }
+        })();
+
+/*
+        //AJAX: Приклад з використанням jQuery
+        $.ajax( // для прикладу використовуємо jQuery $.ajax()
+            {
+                'method' : 'GET', // метод GET
+                'url' : 'https://rtacademy.net/v3/countries.json', // URL
+                'dataType' : 'json', // очікуємо відповідь у типі JSON
+                'success' : function( jsonContents ) // функція, що виконається у разі успіху
+                { // jsonContents - це параметр що буде містити дані відповіді сервера
+                    console.log( jsonContents ); // відображаємо отримані дані з сервера в консолі
+                    // подальший код обробки результатів відповіді повинен бути тут
+                },
+                'error' : function( jqXHR, textStatus, errorThrown ) // функція, що виконається у разі помилки
+                {
+                    console.error( textStatus ); // відображаємо текст помилки в консолі браузера
+                },
+            }
+        );
+
+ */
     </script>
 </body>
 </html>
