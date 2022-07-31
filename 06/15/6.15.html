@@ -3,27 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>Завдання AJAX 6.12</title>
+    <!--Подключаем библиотеку-->
+    <script src="jquery-3.6.0.min.js"></script>
 </head>
 <body>
-
-    <div>
-        <label for="action">Дiя:</label><br>
-        <select id="action" name="action">
-            <option value="" selected>Оберiть дiю...</option>
-            <option value="plus">+</option>
-            <option value="minus" >-</option>
-            <option value="multiply">*</option>
-            <option value="divide">/</option>
-            <option value="percent">%</option>
-            <option value="degree">**</option>
-        </select>
-    </div>
-
 
     <script>
 
         // AJAX: Приклад на XMLHttpRequest
-
         let oReq = new XMLHttpRequest();
         oReq.open("get", "countries.json", true);
         oReq.send();
@@ -51,6 +38,23 @@
                 console.log( jsonContents ); // відображаємо отримані дані з сервера в консолі
                 // подальший код обробки результатів відповіді повинен бути тут
 
+                let input = document.createElement('input');
+                input.setAttribute("list", "list");
+
+                let list = document.createElement('datalist');
+                list.setAttribute("id", "list");
+
+                document.body.append( input );
+                document.body.append( list );
+
+                jsonContents.forEach(
+                    function( item )
+                    {
+                        const option = document.createElement('option');
+                        option.value = item.Name;
+                        list.appendChild(option);
+                    }
+                );
             }
             else
             { // HTTP не 200, обробляємо як помилку
@@ -58,12 +62,12 @@
             }
         })();
 
-/*
+
         //AJAX: Приклад з використанням jQuery
         $.ajax( // для прикладу використовуємо jQuery $.ajax()
             {
                 'method' : 'GET', // метод GET
-                'url' : 'https://rtacademy.net/v3/countries.json', // URL
+                'url' : 'countries.json', // URL
                 'dataType' : 'json', // очікуємо відповідь у типі JSON
                 'success' : function( jsonContents ) // функція, що виконається у разі успіху
                 { // jsonContents - це параметр що буде містити дані відповіді сервера
@@ -76,8 +80,6 @@
                 },
             }
         );
-
- */
-    </script>
+   </script>
 </body>
 </html>
