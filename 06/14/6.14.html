@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.14</title>
+</head>
+<body>
+
+    <style>
+
+        div {
+            margin: 5px;
+        }
+        label
+        {
+            color: gray;
+        }
+        input, select, color, button, textarea
+        {
+            font-family: Arial;
+            font-size: 11px;
+            -moz-border-radius: 15px;
+            border-radius: 5px;
+            padding:5px;
+            border:1px solid gray;
+        }
+        .error
+        {
+            border:1px solid red;
+        }
+        .div_error
+        {
+            display: compact;
+            background-color: red;
+            color: yellow;
+            padding:5px;
+        }
+        .div_result
+        {
+            display: compact;
+            background-color: green;
+            color: yellow;
+            padding:5px;
+        }
+        .div_error_field
+        {
+            color: red;
+        }
+        .show
+        {
+            display: inline-block;
+        }
+        .hide
+        {
+            display: none;
+        }
+        button, input[type=reset]
+        {
+            width: 200px;
+            color: black;
+        }
+
+    </style>
+    <h1>Бронювання залу фотостудii</h1>
+    <div class="div_result hide" >
+
+    </div>
+    <div class="div_error hide" >
+        <ul>
+            <li>
+                Помилка Помилка ПомилкаПомилка 1
+            </li>
+            <li>
+                Помилка Помилка ПомилкаПомилка 2
+            </li>
+            <li>
+                Помилка Помилка ПомилкаПомилка 3
+            </li>
+        </ul>
+    </div>
+    <form id="form">
+        <div class="container">
+            <div>
+                <label for="firstname">* Прiзвище:</label><br>
+                <input id="firstname" name="firstname" required minlength="2" maxlength="64" placeholder="Введiть прiзвище">
+            </div>
+            <div>
+                <label for="lastname">* Iм'я:</label><br>
+                <input id="lastname" name="lastname" required minlength="2" maxlength="64" placeholder="Введiть iм'я">
+            </div>
+            <div>
+                <label for="email">* Email:</label><br>
+                <input id="email" name="email" required minlength="6" maxlength="255" placeholder="Введiть email">
+            </div>
+
+            <div>
+                <label for="phone">* Телефон:</label><br>
+                <input id="phone" name="phone" required minlength="13" maxlength="13" placeholder="+380000000000">
+            </div>
+            <div>
+                <label for="instagram">Профiль Instagram:</label><br>
+                <input id="instagram" name="instagram" minlength="23" maxlength="255" type="url" pattern="https://.*" placeholder="https://instagram.com">
+            </div>
+            <div>
+                <label for="zal">Зал:</label><br>
+                <select id="zal" name="zal" required>
+                    <option value="" selected>Оберiть зал...</option>
+                    <option value="1000">Студия 1000грн.</option>
+                    <option value="900" >Кино студия 900грн.</option>
+                    <option value="800">Зал для взрослого кино 800грн.</option>
+                    <!--<option value="underground">Зал в подвале</option>
+                    <option value="deti">Детские вечеринки</option>
+                    <option value="sport">Спортзал</option>-->
+                </select>
+            </div>
+
+            <div>
+                <label for="time_start">* Дата i час початку:</label><br>
+                <input id="time_start" name="time_start" type="datetime-local" required max="2023-01-01T00:00">
+            </div>
+            <div>
+                <label for="time_end">* Дата i час кiнця:</label><br>
+                <input id="time_end" name="time_end" type="datetime-local" required max="2023-01-01T00:00">
+            </div>
+            <div>
+                <label for="count">* Кiлькiсть людей в залi:</label><br>
+                <input id="count" name="count" type="number" required min="1" max="10">
+            </div>
+            <div>
+                <label for="color">Колiр фона:</label><br>
+                <input id="color" name="color" type="color">
+            </div>
+            <div>
+                <label for="comment">Коментар:</label><br>
+                <textarea id="comment" name="comment" rows="4" cols="50">
+                </textarea>
+            </div>
+            <div>
+                <input id="check" name="check" type="checkbox">
+                <label for="check" required>Я погоджуюсь з <a href="#">правилами фотостудii</a></label><br>
+            </div>
+            <div>
+                <!--<button id="do_reset" name="do_reset" type="reset">Очистити</button> -->
+                <input type='reset' value='Очистити'/>
+                <button id="do_something" name="do_something" disabled>Надiслати</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+
+        const error_class = 'error';
+        let first_check_flag = true;
+        let error_msg = [];
+        const max_date = '2023-01-01T00:00';
+
+        const currentDateTime = () =>
+        {
+            let tzoffset = new Date().getTimezoneOffset() * 60000;
+            let localISOString = new Date( Date.now() - tzoffset )
+                .toISOString()
+                .slice( 0, -1 );
+
+            const datetimeInputString = localISOString.substring(
+                0,
+                ( ( localISOString.indexOf( "T" ) | 0 ) + 6 ) | 0
+            );
+            return datetimeInputString;
+        };
+
+        if( document.getElementById( 'time_start' ) )
+        {
+            document.getElementById( 'time_start' ).value = currentDateTime();
+            document.getElementById( 'time_start' ).min = currentDateTime();
+            document.getElementById( 'time_start' ).max = max_date;
+        }
+
+        if( document.getElementById( 'time_end' ) )
+        {
+            document.getElementById( 'time_end' ).value = currentDateTime();
+            document.getElementById( 'time_end' ).min = currentDateTime();
+            document.getElementById( 'time_end' ).max = max_date;
+        }
+
+        function setErrorMessage( msg )
+        {
+            if( msg.length > 0)
+            {
+                if( document.getElementsByClassName( 'div_error' ) && document.getElementsByClassName( 'div_error' )[ 0 ] )
+                {
+                    let div_error = document.getElementsByClassName( 'div_error' )[ 0 ];
+
+                    // Удаляем global error block
+                    div_error.innerHTML = '';
+                    div_error.innerText = '';
+                    div_error.textContent = '';
+                    while (div_error.firstChild)
+                    {
+                        div_error.removeChild(div_error.firstChild);
+                    }
+
+                    // Удаляем все элементы с классом div_error_field
+                    Array.from(document.getElementsByClassName('div_error_field')).forEach(
+                        err_div =>
+                        {
+                            err_div.remove();
+                        }
+                    );
+
+                    msg.forEach(
+                        message => {
+                            if( document.getElementById( message.id ) )
+                            {
+                                let error_div = document.createElement( 'div' );
+                                error_div.innerHTML = message.msg;
+                                error_div.classList.add( 'div_error_field' );
+                                document.getElementById( message.id ).before(error_div);
+                            }
+                            else
+                            {
+                                let ul = div_error.appendChild( document.createElement( 'ul' ) );
+                                let li = document.createElement( 'li' );
+                                li.innerHTML = message.msg;
+                                ul.append(li);
+                                div_error.classList.add( 'show' );
+                                div_error.classList.remove('hide');
+                            }
+                        }
+                    );
+                }
+                else
+                {
+                    alert( msg );
+                }
+            }
+            else
+            {
+                if( document.getElementsByClassName( 'div_error' ) && document.getElementsByClassName( 'div_error' )[ 0 ] )
+                {
+                    document.getElementsByClassName( 'div_error' )[0].classList.remove('show');
+                    document.getElementsByClassName( 'div_error' )[0].classList.add('hide');
+                }
+            }
+        }
+
+        function clearError( field )
+        {
+            // Удаляем все элементы с классом div_error_field
+            Array.from(document.getElementsByClassName('div_error_field')).forEach(
+                err_div =>
+                {
+                    err_div.remove();
+                }
+            );
+
+            if( document.getElementById( field ) )
+            {
+                document.getElementById( field ).classList.remove( error_class );
+            }
+
+            return document.getElementById( field );
+        }
+
+        function setError(field, msg = '')
+        {
+            if( document.getElementById( field ) )
+            {
+                let el = document.getElementById( field ),
+                    label = document.querySelectorAll( 'label[for=' + field + ']' ),
+                    label_inner = 'Невiдомо';
+
+                if( label && document.querySelectorAll( 'label[for=' + field + ']' )[ 0 ] )
+                {
+                    label_inner = document.querySelectorAll( 'label[for=' + field + ']' )[ 0 ].innerHTML
+                }
+
+                el.classList.add( error_class );
+
+                if( msg.length > 0 )
+                {
+                    error_msg.push(
+                        {
+                            "id" : field,
+                            "msg": msg.replace( '%field%', '<b>' + label_inner + '</b>' )
+                        });
+                }
+            }
+            return false;
+        }
+
+        function checkRequired( field )
+        {
+            let el = document.getElementById( field );
+
+            if( !el ) return false;
+
+            /*if( !el.value.trim().length )
+            {
+                return ;
+            }
+            else
+            {
+                return true;
+            }*/
+            //
+            return ( !el.value.trim().length ? setError(field, 'Поле є обов\'язковим для заповнення') : true );
+        }
+
+        function checked()
+        {
+            error_msg = [];
+
+            if( [
+                'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment', 'check'
+            ].every( clearError ) )
+            {
+                if( first_check_flag ) return; // Если ни разу не нажимали на кнопку расчитать, то не валидируем на потерю фокуса
+
+                let element = '';
+                // в первую очередь помечаем красным все пустые и required
+                if( //true ||
+                    [
+                        'firstname', 'lastname', 'email', 'phone', 'zal', 'time_start', 'time_end', 'count'
+                    ].filter( checkRequired ).length ===
+                    [
+                        'firstname', 'lastname', 'email', 'phone', 'zal', 'time_start', 'time_end', 'count'
+                    ].length
+                )
+                {
+                    // ------- firstname -------------
+                    element = document.getElementById( 'firstname' );
+                    if( element.value.length < 2 )
+                    {
+                        setError( 'firstname', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>2</b> символи)' );
+                    }
+                    if( element.value.length > 64 )
+                    {
+                        setError( 'firstname', 'Значення для поля %field% занадто довге (максимально можливе довжина <b>64<b> символи)' );
+                    }
+
+                    // ------- lastname -------------
+                    element = document.getElementById( 'lastname' );
+                    if( element.value.length < 2 )
+                    {
+                        setError( 'lastname', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>2</b> символи)' );
+                    }
+                    if( element.value.length > 64 )
+                    {
+                        setError( 'lastname', 'Значення для поля %field% занадто довге (максимально можливе довжина <b>64<b> символи)' );
+                    }
+
+                    // ------- email -------------
+                    element = document.getElementById( 'email' );
+                    if( element.value.length < 6 )
+                    {
+                        setError( 'email', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>6</b> символи)' );
+                    }
+                    if( element.value.length > 255 )
+                    {
+                        setError( 'email', 'Значення для поля %field% занадто довге (максимально можливе довжина <b>255<b> символи)' );
+                    }
+
+                    if( !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test( element.value.trim() ) )
+                    {
+                        setError( 'email', 'Значення для поля %field% не валідне' );
+                    }
+                    // ------- phone -------------
+                    element = document.getElementById( 'phone' );
+                    if( element.value.length != 13 )
+                    {
+                        setError( 'phone', 'Довжина значення для поля %field% можливе тiльки довжиною <b>13</b> символiв' );
+                    }
+
+                    if( !/^\+38(\d){10}$/i.test( element.value.trim() ) )
+                    {
+                        setError( 'phone', 'Значення для поля %field% не валідне' );
+                    }
+
+                    // ------- instagram -------------
+                    element = document.getElementById( 'instagram' );
+                    if( element.value.length > 0 )
+                    {
+                        if( element.value.length < 23 )
+                        {
+                            setError( 'instagram', 'Значення для поля %field% занадто коротке (мінімально можливе довжиною <b>23</b> символи)' );
+                        }
+                        if( element.value.length > 255 )
+                        {
+                            setError( 'instagram', 'Значення для поля %field% занадто довге (максимально можливе довжина <b>255<b> символи)' );
+                        }
+
+                        if( !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test( element.value.trim() ) )
+                        {
+                            setError( 'instagram', 'Значення для поля %field% не валідне' );
+                        }
+
+                    }
+
+                    // ------- zal -------------
+                    element = document.getElementById( 'zal' );
+                    if( element.value.length > 0 )
+                    {
+                        if( !/^(1000)|(900)|(800)$/i.test( element.value.trim() ) )
+                        {
+                            setError( 'zal', 'Значення для поля %field% не валідне' );
+                        }
+                    }
+
+                    // ------- date -------------
+                    const start = document.getElementById( 'time_start' ),
+                        end = document.getElementById( 'time_end' ),
+                        start_ts = Date.parse( start.value ),
+                        end_ts = Date.parse( end.value );
+
+                    if( !start_ts )
+                    {
+                        setError( 'time_start', 'Значення для поля %field% не валідне' );
+                    }
+
+                    if( !end_ts )
+                    {
+                        setError( 'time_end', 'Значення для поля %field% не валідне' );
+                    }
+
+                    if( start_ts && end_ts )
+                    {
+                        let now_ = new Date();
+
+                        if( start_ts > Date.parse( max_date ) )
+                        {
+                            setError( 'time_start', 'Значення для поля %field% не має бути не старіше (' + max_date + ')' );
+                        }
+
+                        if( end_ts > Date.parse( max_date ) )
+                        {
+                            setError( 'time_end', 'Значення для поля %field% не має бути не старіше (' + max_date + ')' );
+                        }
+
+                        if( start_ts < now_ )
+                        {
+                            setError( 'time_start', 'Значення для поля %field% не має бути раніше поточної години (' + currentDateTime() + ')' );
+                        }
+
+                        if( end_ts < now_ )
+                        {
+                            setError( 'time_end', 'Значення для поля %field% не має бути раніше поточної години (' + currentDateTime() + ')' );
+                        }
+
+                        if( end_ts < start_ts )
+                        {
+                            setError( 'time_start', 'Значення для поля %field% не має бути більшою за дату і час кінця (' + start.value + ')' );
+                        }
+
+                        let diff = end_ts - start_ts;
+                        diff /= 1000;
+
+                        let hours = Math.round( diff / 3600 ),
+                            minute = Math.round( diff / 60 % 60 );
+
+                        if( minute > 0 )
+                        {
+                            setError( 'time_start', 'Значення для поля %field% - мінімальне замовлення має бути кратне одній годині (у Вас - ' + hours + ' год. ' + minute + ' хв.)' );
+                            setError( 'time_end', 'Значення для поля %field% - мінімальне замовлення має бути кратне одній годині (у Вас - ' + hours + ' год. ' + minute + ' хв.)' );
+                        }
+                    }
+
+                    // ------- count -------------
+                    element = document.getElementById( 'count' );
+                    if( element.value < 1 )
+                    {
+                        setError( 'count', 'Значення для поля %field% занадто коротке (мінімально можливе <b>1</b> людина)' );
+                    }
+                    if( element.value > 10 )
+                    {
+                        setError( 'count', 'Значення для поля %field% занадто довге (максимально можливе <b>10<b> людей)' );
+                    }
+
+                    // ------- count -------------
+                    element = document.getElementById( 'check' );
+                    if( !element.value )
+                    {
+                        setError( 'check', 'Значення для поля %field% необхідно "Погодитись з правилами фотостудії"' );
+                    }
+
+                }
+            }
+            else
+            {
+                error_msg.push(
+                    {
+                        "id" : 'error',
+                        "msg": 'ОКСАНО, не шали не всi поля присутні: DevTools forever !'
+                    } );
+            }
+
+            setErrorMessage( error_msg );
+
+        }
+
+        function calc()
+        {
+            first_check_flag = false;
+
+            checked();
+
+            if( !error_msg.length )
+            {
+                //расчет стоимости...
+                const count = document.getElementById( 'count' ).value,
+                    zal = document.getElementById( 'zal' ).value;
+                let cost = 0;
+
+                // ------- date -------------
+                const start = document.getElementById( 'time_start' ),
+                    end = document.getElementById( 'time_end' ),
+                    start_ts = Date.parse( start.value ),
+                    end_ts = Date.parse( end.value );
+
+                //Ночные часы (расчет)
+                let i = start_ts,
+                    hour = -1,
+                    night_hour = 0;
+
+                while( i < end_ts )
+                {
+                    hour = (new Date(i)).getHours();
+
+                    if( !( hour > 8 && hour < 21) )
+                    {
+                        night_hour ++;
+                    }
+
+                    i += 3600000;
+                }
+
+                let hours = Math.round( ( end_ts - start_ts ) /1000 / 3600 );
+
+                cost = (hours * zal) + ( night_hour * ( zal / 2 ) );
+
+                if( count > 3 )
+                {
+                    cost += (count - 3) * 50 * hours;
+                }
+
+                cost = Math.round( cost );
+
+                if( cost === NaN )
+                {
+                    cost = 'Вартість оренди розрахувати неможливо';
+                }
+                else
+                {
+                    cost = 'Вартість оренди залу: ' + cost + ' грн.';
+                }
+
+                let div_result = document.getElementsByClassName( 'div_result' )[ 0 ];
+
+                div_result.innerHTML = '';
+                div_result.innerText = '';
+                div_result.textContent = '';
+
+                while (div_result.firstChild)
+                {
+                    div_result.removeChild(div_result.firstChild);
+                }
+
+                let ul = div_result.appendChild( document.createElement( 'ul' ) );
+                let li = document.createElement( 'li' );
+                li.innerHTML = cost;
+                ul.append(li);
+                div_result.classList.add( 'show' );
+                div_result.classList.remove('hide');
+            }
+
+        };
+
+        function handleChange( )
+        {
+            let checkbox = document.getElementById( 'check' );
+
+            if( document.getElementById( 'do_something' ) )
+            {
+                if( checkbox.checked )
+                {
+                    document.getElementById( 'do_something' ).removeAttribute("disabled");
+                }
+                else
+                {
+                    document.getElementById( 'do_something' ).setAttribute( "disabled", "disabled" );
+                }
+            }
+        }
+
+        if( document.getElementById( 'do_something' ) )
+        {
+            document.getElementById( 'do_something' ).onclick = calc;
+        }
+
+        [
+            'firstname', 'lastname', 'email', 'phone', 'instagram', 'zal', 'time_start', 'time_end', 'count', 'color', 'comment'
+        ].some( function( element )
+            {
+                if( document.getElementById( element ) )
+                {
+                    document.getElementById( element ).onchange = checked;
+                }
+            }
+        );
+
+        if( document.getElementById( 'check' ) )
+        {
+            document.getElementById( 'check' ).onchange = handleChange;
+        }
+
+        if( document.getElementById('form') )
+        {
+            document.getElementById( 'form' ).addEventListener( 'submit', ( event ) => event.preventDefault() );
+        }
+
+    </script>
+</body>
+</html>
