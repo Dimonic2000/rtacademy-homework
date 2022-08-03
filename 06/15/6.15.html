@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання AJAX 6.12</title>
+    <!--Подключаем библиотеку-->
+    <script src="jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <script>
+        function getByXMLHttpRequest()
+        {
+            // AJAX: Приклад на XMLHttpRequest
+            let oReq = new XMLHttpRequest();
+            oReq.open( "get", "countries.json", true );
+            oReq.send();
+
+            oReq.onload = function()
+            {
+                if( oReq.status == 200 )
+                {
+                    console.log( oReq.response );
+                }
+                else
+                {
+                    console.error( 'Сталася помилка ' + oReq.status + ': ' + oReq.statusText );
+                }
+            };
+        }
+
+        function getByjQuery()
+        {
+            //AJAX: Приклад з використанням jQuery
+            $.ajax( // для прикладу використовуємо jQuery $.ajax()
+                {
+                    'method'  : 'GET', // метод GET
+                    'url'     : 'countries.json', // URL
+                    'dataType': 'json', // очікуємо відповідь у типі JSON
+                    'success' : function( jsonContents ) // функція, що виконається у разі успіху
+                    { // jsonContents - це параметр що буде містити дані відповіді сервера
+                        console.log( jsonContents ); // відображаємо отримані дані з сервера в консолі
+                        // подальший код обробки результатів відповіді повинен бути тут
+                    },
+                    'error'   : function( jqXHR, textStatus, errorThrown ) // функція, що виконається у разі помилки
+                    {
+                        console.error( textStatus ); // відображаємо текст помилки в консолі браузера
+                    },
+                }
+            );
+        }
+
+        function createInput( countries )
+        {
+            let input = document.createElement( 'input' );
+            input.setAttribute( "list", "list" );
+
+            let list = document.createElement( 'datalist' );
+            list.setAttribute( "id", "list" );
+
+            document.body.append( input );
+            document.body.append( list );
+
+            countries.forEach(
+                function( item )
+                {
+                    const option = document.createElement( 'option' );
+                    option.value = item.Name;
+                    list.appendChild( option );
+                }
+            );
+        }
+
+        function getByFetch()
+        {
+            //AJAX: Приклад з використанням fetch()
+            ( async function()
+            {
+                // GET-запит для URL /v3/countries.json
+                let response = await fetch( 'countries.json' );
+
+                if( response.ok ) // HTTP = 200, все ОК
+                {
+                    let jsonContents = await response.json(); // читаємо відповідь в форматі JSON
+                    console.log( jsonContents ); // відображаємо отримані дані з сервера в консолі
+                    // подальший код обробки результатів відповіді повинен бути тут
+                    createInput(jsonContents);
+                }
+                else
+                { // HTTP не 200, обробляємо як помилку
+                    console.error( 'Сталася помилка ' + response.status + ': ' + response.statusText );
+                }
+            } )();
+        }
+
+        getByXMLHttpRequest();
+        getByjQuery();
+        getByFetch();
+
+   </script>
+</body>
+</html>
