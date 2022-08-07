@@ -7,51 +7,23 @@
 <body>
 
     <script>
-        function getByXMLHttpRequest()
+        function onClick( )
         {
-            // AJAX: Приклад на XMLHttpRequest
-            let oReq = new XMLHttpRequest();
-            oReq.open( "get", "countries.json", true );
-            oReq.send();
+            let list_input = document.getElementById('list_input');
+                //selected_option = document.querySelector('option[value=' + list_input.value + ']');
 
-            oReq.onload = function()
-            {
-                if( oReq.status == 200 )
-                {
-                    console.log( oReq.response );
-                }
-                else
-                {
-                    console.error( 'Сталася помилка ' + oReq.status + ': ' + oReq.statusText );
-                }
-            };
-        }
+            //getCities( selected_option.id );
+            getCities( document.getElementById('list_input').value );
 
-        function getByjQuery()
-        {
-            //AJAX: Приклад з використанням jQuery
-            $.ajax( // для прикладу використовуємо jQuery $.ajax()
-                {
-                    'method'  : 'GET', // метод GET
-                    'url'     : 'countries.json', // URL
-                    'dataType': 'json', // очікуємо відповідь у типі JSON
-                    'success' : function( jsonContents ) // функція, що виконається у разі успіху
-                    { // jsonContents - це параметр що буде містити дані відповіді сервера
-                        console.log( jsonContents ); // відображаємо отримані дані з сервера в консолі
-                        // подальший код обробки результатів відповіді повинен бути тут
-                    },
-                    'error'   : function( jqXHR, textStatus, errorThrown ) // функція, що виконається у разі помилки
-                    {
-                        console.error( textStatus ); // відображаємо текст помилки в консолі браузера
-                    },
-                }
-            );
+            //console.log(selected_option);
+            //console.log(selected_option.id);
         }
 
         function createInput( countries )
         {
             let input = document.createElement( 'input' );
             input.setAttribute( "list", "list" );
+            input.setAttribute( "id", "list_input" );
 
             let list = document.createElement( 'datalist' );
             list.setAttribute( "id", "list" );
@@ -64,9 +36,12 @@
                 {
                     const option = document.createElement( 'option' );
                     option.value = item.Name;
+                    option.id = item.Code;
                     list.appendChild( option );
                 }
             );
+
+            input.onchange = onClick;
         }
 
         function getByFetch()
@@ -80,8 +55,6 @@
                 if( response.ok ) // HTTP = 200, все ОК
                 {
                     let jsonContents = await response.json(); // читаємо відповідь в форматі JSON
-                    console.log( jsonContents ); // відображаємо отримані дані з сервера в консолі
-                    // подальший код обробки результатів відповіді повинен бути тут
                     createInput(jsonContents);
                 }
                 else
@@ -91,8 +64,116 @@
             } )();
         }
 
-        getByXMLHttpRequest();
-        getByjQuery();
+        const parceCity = ( cities, citi ) =>
+        {
+            let contentArray = cities.split( "\n" ),
+                resultArray = [];
+
+            for( let i = 0; i < contentArray.length; i++ )
+            {
+                if( contentArray[i].trim().length >= 10 )
+                {
+                    let row = contentArray[ i ].trim().split( "," );
+
+                    if( citi == row[3] )
+                    {
+                        resultArray.push( row );
+                    }
+                }
+            }
+
+            return resultArray;
+        };
+
+        function generateTable( data, sort = 'asc', sort_index = 2 )
+        {
+            //console.log(data);
+
+            if( document.getElementById('city_table') )
+            {
+                document.getElementById('city_table').remove();
+            }
+
+            const tbl = document.createElement("table");
+            tbl.setAttribute('id', 'city_table');
+            const tblBody = document.createElement("tbody");
+
+            data.sort( ( a, b ) =>
+            {
+                let nameA = a[sort_index].toLowerCase(),
+                    nameB = b[sort_index].toLowerCase();
+
+                if (nameA < nameB)
+                {
+                    return sort == 'asc' ? -1 : 1;
+                }
+                if (nameA > nameB)
+                {
+                    return sort == 'asc' ? 1 : -1;
+                }
+                return 0
+            } );
+
+            data.unshift( [ 'Назва', 'Координати', 'Населення' ] );
+
+            // creating all cells
+            for (let i = 0; i < data.length; i++) {
+                const row = document.createElement("tr");
+
+                for (let j = 0; j < 3; j++) {
+
+                    if( i == 0)
+                    {
+                        const cell = document.createElement( 'th' );
+                        if( j != 1 )
+                        {
+                            const a = document.createElement( 'a' );
+                            a.setAttribute('href', '#');
+                            a.setAttribute('direction', sort);
+                            a.setAttribute('index', j);
+                            a.innerHTML = '<img src="' + (j == sort_index ? sort : 'asc') + '.gif">';
+                            cell.appendChild(a);
+                        }
+
+                        const cellText = document.createTextNode(data[i][j]);
+                        cell.appendChild(cellText);
+                        row.appendChild(cell);
+                    }
+                    else
+                    {
+                        const cell = document.createElement( 'td' );
+                        const cellText = document.createTextNode(data[i][j]);
+                        cell.appendChild(cellText);
+                        row.appendChild(cell);
+                    }
+                }
+
+                tblBody.appendChild(row);
+            }
+
+            tbl.appendChild(tblBody);
+            document.body.appendChild(tbl);
+            tbl.setAttribute("border", "3");
+        }
+
+        function getCities( city )
+        {
+            ( async function()
+            {
+                let response = await fetch( 'cities.csv' );
+
+                if( response.ok ) // HTTP = 200, все ОК
+                {
+                    let jsonContents = await response.text();
+                    generateTable( parceCity( jsonContents, city ) );
+                }
+                else
+                { // HTTP не 200, обробляємо як помилку
+                    console.error( 'Сталася помилка ' + response.status + ': ' + response.statusText );
+                }
+            } )();
+        }
+
         getByFetch();
 
    </script>
