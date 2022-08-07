@@ -85,6 +85,39 @@
             return resultArray;
         };
 
+        function generateCaptionTable( tblBody, sort = 'asc', sort_index = 0 )
+        {
+            // Формируем заголовок таблицы с функциональностью
+            let caption = [ 'Назва', 'Координати', 'Населення' ];
+
+            const row = document.createElement("tr");
+
+            for (let j = 0; j < caption.length; j++)
+            {
+                const cell = document.createElement( 'th' );
+                if( j != 1 )
+                {
+                    const a = document.createElement( 'a' );
+                    a.setAttribute( 'href', '#' );
+                    a.setAttribute( 'direction', ( sort == 'asc' ? 'desc' : 'asc' ) );
+                    a.setAttribute( 'index', j );
+                    a.onclick = function()
+                    {
+                        generateTable( a.getAttribute('direction'), a.getAttribute('index') );
+                    };
+                    a.innerHTML = '<img src="' + (j == sort_index ? sort : 'asc') + '.gif">';
+                    cell.appendChild( a );
+                }
+
+                const cellText = document.createTextNode( caption[ j ] );
+                cell.appendChild( cellText );
+                row.appendChild( cell );
+            }
+
+            tblBody.appendChild(row);
+            // END table Caption
+        }
+
         function generateTable( sort = 'asc', sort_index = 0 )
         {
             if( document.getElementById('city_table') )
@@ -112,34 +145,7 @@
                 return 0
             } );
 
-            // Формируем заголовок таблицы с функциональностью
-            let caption = [ 'Назва', 'Координати', 'Населення' ];
-            const row = document.createElement("tr");
-
-            for (let j = 0; j < caption.length; j++)
-            {
-                const cell = document.createElement( 'th' );
-                if( j != 1 )
-                {
-                    const a = document.createElement( 'a' );
-                    a.setAttribute( 'href', '#' );
-                    a.setAttribute( 'direction', ( sort == 'asc' ? 'desc' : 'asc' ) );
-                    a.setAttribute( 'index', j );
-                    a.onclick = function()
-                    {
-                        generateTable( a.getAttribute('direction'), a.getAttribute('index') );
-                    };
-                    a.innerHTML = '<img src="' + (j == sort_index ? sort : 'asc') + '.gif">';
-                    cell.appendChild( a );
-                }
-
-                const cellText = document.createTextNode( caption[ j ] );
-                cell.appendChild( cellText );
-                row.appendChild( cell );
-            }
-
-            tblBody.appendChild(row);
-            // END table Caption
+            generateCaptionTable( tblBody, sort, sort_index );
 
             // creating all cells
             for (let i = 0; i < data_table.length; i++) {
