@@ -7,16 +7,16 @@
 <body>
 
     <script>
+        let city = '',
+            data_table = '';
+
         function onClick( )
         {
-            let list_input = document.getElementById('list_input');
-                //selected_option = document.querySelector('option[value=' + list_input.value + ']');
-
-            //getCities( selected_option.id );
-            getCities( document.getElementById('list_input').value );
-
-            //console.log(selected_option);
-            //console.log(selected_option.id);
+            if( document.getElementById('list_input') )
+            {
+                city = document.getElementById( 'list_input' ).value;
+                getCities( );
+            }
         }
 
         function createInput( countries )
@@ -64,7 +64,7 @@
             } )();
         }
 
-        const parceCity = ( cities, citi ) =>
+        const parceCity = ( cities ) =>
         {
             let contentArray = cities.split( "\n" ),
                 resultArray = [];
@@ -75,7 +75,7 @@
                 {
                     let row = contentArray[ i ].trim().split( "," );
 
-                    if( citi == row[3] )
+                    if( city == row[3] )
                     {
                         resultArray.push( row );
                     }
@@ -85,10 +85,8 @@
             return resultArray;
         };
 
-        function generateTable( data, sort = 'asc', sort_index = 2 )
+        function generateTable( sort = 'asc', sort_index = 2 )
         {
-            //console.log(data);
-
             if( document.getElementById('city_table') )
             {
                 document.getElementById('city_table').remove();
@@ -98,7 +96,7 @@
             tbl.setAttribute('id', 'city_table');
             const tblBody = document.createElement("tbody");
 
-            data.sort( ( a, b ) =>
+            data_table.sort( ( a, b ) =>
             {
                 let nameA = a[sort_index].toLowerCase(),
                     nameB = b[sort_index].toLowerCase();
@@ -114,38 +112,43 @@
                 return 0
             } );
 
-            data.unshift( [ 'Назва', 'Координати', 'Населення' ] );
+            let caption = [ 'Назва', 'Координати', 'Населення' ];
+            const row = document.createElement("tr");
+
+            for (let j = 0; j < caption.length; j++)
+            {
+                const cell = document.createElement( 'th' );
+                if( j != 1 )
+                {
+                    const a = document.createElement( 'a' );
+                    a.setAttribute( 'href', '#' );
+                    a.setAttribute( 'direction', ( sort == 'asc' ? 'desc' : 'asc' ) );
+                    a.setAttribute( 'index', j );
+                    a.onclick = function()
+                    {
+                        sortChange( a )
+                    };
+                    //a.innerHTML = '<img src="' + (j == sort_index ? sort : 'asc') + '.gif">';
+                    a.innerHTML = '<img src="' + sort + '.gif">';
+                    cell.appendChild( a );
+                }
+
+                const cellText = document.createTextNode( caption[ j ] );
+                cell.appendChild( cellText );
+                row.appendChild( cell );
+            }
+
+            tblBody.appendChild(row);
 
             // creating all cells
-            for (let i = 0; i < data.length; i++) {
+            for (let i = 0; i < data_table.length; i++) {
                 const row = document.createElement("tr");
 
                 for (let j = 0; j < 3; j++) {
-
-                    if( i == 0)
-                    {
-                        const cell = document.createElement( 'th' );
-                        if( j != 1 )
-                        {
-                            const a = document.createElement( 'a' );
-                            a.setAttribute('href', '#');
-                            a.setAttribute('direction', sort);
-                            a.setAttribute('index', j);
-                            a.innerHTML = '<img src="' + (j == sort_index ? sort : 'asc') + '.gif">';
-                            cell.appendChild(a);
-                        }
-
-                        const cellText = document.createTextNode(data[i][j]);
-                        cell.appendChild(cellText);
-                        row.appendChild(cell);
-                    }
-                    else
-                    {
-                        const cell = document.createElement( 'td' );
-                        const cellText = document.createTextNode(data[i][j]);
-                        cell.appendChild(cellText);
-                        row.appendChild(cell);
-                    }
+                    const cell = document.createElement( 'td' );
+                    const cellText = document.createTextNode(data_table[i][j]);
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
                 }
 
                 tblBody.appendChild(row);
@@ -156,7 +159,13 @@
             tbl.setAttribute("border", "3");
         }
 
-        function getCities( city )
+        function sortChange( tag_a )
+        {
+            console.log(tag_a);
+            generateTable( tag_a.getAttribute('direction'), tag_a.getAttribute('index') );
+        }
+
+        function getCities( )
         {
             ( async function()
             {
@@ -164,8 +173,8 @@
 
                 if( response.ok ) // HTTP = 200, все ОК
                 {
-                    let jsonContents = await response.text();
-                    generateTable( parceCity( jsonContents, city ) );
+                    data_table = parceCity( await response.text() );
+                    generateTable( );
                 }
                 else
                 { // HTTP не 200, обробляємо як помилку
