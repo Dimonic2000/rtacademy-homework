@@ -7,14 +7,14 @@
 <body>
 
     <script>
-        let city = '',
-            data_table = '';
+        let country = '',       // Выбранная страна в выпадалке
+            data_table = '';    // Данные подготовленные для вывода в таблицу
 
         function onClick( )
         {
             if( document.getElementById('list_input') )
             {
-                city = document.getElementById( 'list_input' ).value;
+                country = document.getElementById( 'list_input' ).value;
                 getCities( );
             }
         }
@@ -75,7 +75,7 @@
                 {
                     let row = contentArray[ i ].trim().split( "," );
 
-                    if( city == row[3] )
+                    if( country == row[3] )
                     {
                         resultArray.push( row );
                     }
@@ -85,7 +85,7 @@
             return resultArray;
         };
 
-        function generateTable( sort = 'asc', sort_index = 2 )
+        function generateTable( sort = 'asc', sort_index = 0 )
         {
             if( document.getElementById('city_table') )
             {
@@ -112,6 +112,7 @@
                 return 0
             } );
 
+            // Формируем заголовок таблицы с функциональностью
             let caption = [ 'Назва', 'Координати', 'Населення' ];
             const row = document.createElement("tr");
 
@@ -126,10 +127,9 @@
                     a.setAttribute( 'index', j );
                     a.onclick = function()
                     {
-                        sortChange( a )
+                        generateTable( a.getAttribute('direction'), a.getAttribute('index') );
                     };
-                    //a.innerHTML = '<img src="' + (j == sort_index ? sort : 'asc') + '.gif">';
-                    a.innerHTML = '<img src="' + sort + '.gif">';
+                    a.innerHTML = '<img src="' + (j == sort_index ? sort : 'asc') + '.gif">';
                     cell.appendChild( a );
                 }
 
@@ -139,6 +139,7 @@
             }
 
             tblBody.appendChild(row);
+            // END table Caption
 
             // creating all cells
             for (let i = 0; i < data_table.length; i++) {
@@ -157,12 +158,6 @@
             tbl.appendChild(tblBody);
             document.body.appendChild(tbl);
             tbl.setAttribute("border", "3");
-        }
-
-        function sortChange( tag_a )
-        {
-            console.log(tag_a);
-            generateTable( tag_a.getAttribute('direction'), tag_a.getAttribute('index') );
         }
 
         function getCities( )
