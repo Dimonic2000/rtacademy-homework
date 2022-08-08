@@ -77,7 +77,7 @@
 
                     if( country == row[3] )
                     {
-                        resultArray.push( row );
+                        resultArray.push( [ row[0], row[1]+', '+row[2], (row[4] ? row[4] : '0') ]);
                     }
                 }
             }
