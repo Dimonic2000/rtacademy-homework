@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання 6.13</title>
+</head>
+<body>
+
+    <style>
+
+        div {
+            margin: 15px;
+        }
+        div.container {
+            float: left;
+        }
+        div.result {
+            background-color: aliceblue;
+            width: 175px;
+            font-family: Arial;
+            font-size: 11px;
+            -moz-border-radius: 15px;
+            border-radius: 5px;
+            text-align: center;
+            vertical-align: center;
+            border:1px solid gray;
+        }
+        div.result_date {
+            background-color : #fafffb;
+            border-top:1px solid gray;
+            margin: 0;
+            font-family: Arial;
+            font-size: 11px;
+            -moz-border-radius: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        label
+        {
+            color: gray;
+        }
+        input, button
+        {
+            font-family: Arial;
+            font-size: 11px;
+            -moz-border-radius: 15px;
+            border-radius: 5px;
+            padding:5px;
+            border:1px solid gray;
+        }
+        .error
+        {
+            border:1px solid red;
+        }
+        button
+        {
+            width: 175px;
+            background-color: #126bff;
+            color: white;
+        }
+
+    </style>
+
+    <div class="container">
+        <div>
+            <label for="time_start">Дата i час початку</label><br>
+            <input id="time_start" name="time_start" type="datetime-local" required>
+        </div>
+        <div>
+            <label for="time_end">Дата i час кінця</label><br>
+            <input id="time_end" name="time_end" type="datetime-local" required>
+        </div>
+        <div>
+            <button id="do_something" name="do_something">Розрахувати різницю</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="result">
+            Різниця між датами
+            <div class="result_date" id="result_date">
+                Різниця мiж <br>становить
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const error_class = 'error';
+
+        function getDays( value )
+        {
+            if( value <= 0 )
+            {
+                return '';
+            }
+
+            let day;
+
+            if(
+                value == 1 || value == 21 ||
+                (
+                    (value > 21) &&
+                    ((value - 1) % 10) === 0
+                )
+            ){
+                day = " день ";
+            }
+            else if(value == 2 || value == 3 || value == 4){
+                day = " днi ";
+            }
+            else {
+                day = " днiв ";
+            }
+            return value + ' ' + day;
+        }
+
+        function getHours( value )
+        {
+            if( value <= 0 )
+            {
+                return '';
+            }
+
+            let hour;
+
+            if(
+                value == 1 ||
+                (
+                    (value >= 21) &&
+                    ((value - 1) % 10) === 0
+                )
+            )
+            {
+                hour = " година ";
+            }
+            else if( !(value >= 12 && value <= 14) &&
+                (
+                    ( (value - 2) % 10) === 0  ||
+                    ( (value - 3) % 10) === 0  ||
+                    ( (value - 4) % 10) === 0
+                )
+            )
+            {
+                hour = " години ";
+            }
+            else {
+                hour = " годин ";
+            }
+
+            return ', ' + value + ' ' + hour;
+        }
+
+        function getMinute( value )
+        {
+            if( value <= 0 )
+            {
+                return '';
+            }
+
+            let hour;
+
+            if( value == 1 )
+            {
+                hour = "хвилину ";
+            }
+            else if (
+                    (value >= 21) &&
+                    ((value - 1) % 10) === 0
+            )
+            {
+                hour = "хвилина ";
+            }
+            else if( !(value >= 12 && value <= 14) &&
+                (
+                    ( (value - 2) % 10) === 0  ||
+                    ( (value - 3) % 10) === 0  ||
+                    ( (value - 4) % 10) === 0
+                )
+            )
+            {
+                hour = "хвилини ";
+            }
+            else {
+                hour = "хвилин ";
+            }
+
+            return ' та '+ value + ' ' + hour;
+        }
+
+
+        /*for( let step = 0; step < 50; step++)
+        {
+            console.log(getMinute(step));
+        }*/
+
+        function diff()
+        {
+            if( document.getElementById('time_start') && document.getElementById('time_end') )
+            {
+                const start     = document.getElementById( 'time_start' ),
+                      end       = document.getElementById( 'time_end' ),
+                      result    = document.getElementById( 'result_date' ),
+                      start_ts  = Date.parse(start.value),
+                      end_ts    = Date.parse(end.value);
+
+                if( start_ts > end_ts )
+                {
+                    start.classList.add(error_class);
+                    end.classList.add(error_class);
+                }
+                else
+                {
+                    start.classList.remove(error_class);
+                    end.classList.remove(error_class);
+
+                    let interval = end_ts - start_ts;
+                    interval /= 1000;
+                    let day, hour, minute;
+                    day = Math.round(interval / 60 / 60 / 24);
+                    hour = Math.round(interval / 60 / 60 % 24);
+                    minute = Math.round(interval / 60 % 60);
+
+                    result.innerHTML = 'Різниця мiж '+ start.value +' та '+ end.value +' становить '+ getDays(day)+getHours(hour)+getMinute(minute);
+                }
+            }
+        };
+
+
+        // Если есть на странице, то вешаем клик:
+        if( document.getElementById( 'do_something' ) )
+        {
+            document.getElementById( 'do_something' ).onclick = diff;
+        }
+
+    </script>
+</body>
+</html>
