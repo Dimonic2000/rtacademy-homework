@@ -67,18 +67,18 @@
             <input id="time_start" name="time_start" type="datetime-local" required>
         </div>
         <div>
-            <label for="time_end">Дата i час кiнця</label><br>
+            <label for="time_end">Дата i час кінця</label><br>
             <input id="time_end" name="time_end" type="datetime-local" required>
         </div>
         <div>
-            <button id="do_something" name="do_something">Розрахувати рiзницю</button>
+            <button id="do_something" name="do_something">Розрахувати різницю</button>
         </div>
     </div>
     <div class="container">
         <div class="result">
-            Рiзниця мiж датами
+            Різниця між датами
             <div class="result_date" id="result_date">
-                Рiзниця мiж <br>становить
+                Різниця мiж <br>становить
             </div>
         </div>
     </div>
@@ -219,7 +219,7 @@
                     hour = Math.round(interval / 60 / 60 % 24);
                     minute = Math.round(interval / 60 % 60);
 
-                    result.innerHTML = 'Рiзниця мiж '+ start.value +' та '+ end.value +' становить '+ getDays(day)+getHours(hour)+getMinute(minute);
+                    result.innerHTML = 'Різниця мiж '+ start.value +' та '+ end.value +' становить '+ getDays(day)+getHours(hour)+getMinute(minute);
                 }
             }
         };
