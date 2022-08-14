@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання AJAX 6.16</title>
+</head>
+<body>
+
+    <script>
+        let country = '',       // Выбранная страна в выпадалке
+            data_table = '';    // Данные подготовленные для вывода в таблицу
+
+        function onClick( )
+        {
+            if( document.getElementById('list_input') )
+            {
+                country = document.getElementById( 'list_input' ).value;
+                getCities( );
+            }
+        }
+
+        function createInput( countries )
+        {
+            let input = document.createElement( 'input' );
+            input.setAttribute( "list", "list" );
+            input.setAttribute( "id", "list_input" );
+
+            let list = document.createElement( 'datalist' );
+            list.setAttribute( "id", "list" );
+
+            document.body.append( input );
+            document.body.append( list );
+
+            countries.forEach(
+                function( item )
+                {
+                    const option = document.createElement( 'option' );
+                    option.value = item.Name;
+                    option.id = item.Code;
+                    list.appendChild( option );
+                }
+            );
+
+            input.onchange = onClick;
+        }
+
+        function getByFetch()
+        {
+            //AJAX: Приклад з використанням fetch()
+            ( async function()
+            {
+                // GET-запит для URL /v3/countries.json
+                let response = await fetch( 'countries.json' );
+
+                if( response.ok ) // HTTP = 200, все ОК
+                {
+                    let jsonContents = await response.json(); // читаємо відповідь в форматі JSON
+                    createInput(jsonContents);
+                }
+                else
+                { // HTTP не 200, обробляємо як помилку
+                    console.error( 'Сталася помилка ' + response.status + ': ' + response.statusText );
+                }
+            } )();
+        }
+
+        const parceCity = ( cities ) =>
+        {
+            let contentArray = cities.split( "\n" ),
+                resultArray = [];
+
+            for( let i = 0; i < contentArray.length; i++ )
+            {
+                if( contentArray[i].trim().length >= 10 )
+                {
+                    let row = contentArray[ i ].trim().split( "," );
+
+                    if( country == row[3] )
+                    {
+                        resultArray.push( [ row[0], row[1]+', '+row[2], (row[4] ? row[4] : '0') ]);
+                    }
+                }
+            }
+
+            return resultArray;
+        };
+
+        function generateCaptionTable( tblBody, sort = 'asc', sort_index = 0 )
+        {
+            // Формируем заголовок таблицы с функциональностью
+            let caption = [ 'Назва', 'Координати', 'Населення' ];
+
+            const row = document.createElement("tr");
+
+            for (let j = 0; j < caption.length; j++)
+            {
+                const cell = document.createElement( 'th' );
+                if( j != 1 )
+                {
+                    const a = document.createElement( 'a' );
+                    a.setAttribute( 'href', '#' );
+                    a.setAttribute( 'direction', ( sort == 'asc' ? 'desc' : 'asc' ) );
+                    a.setAttribute( 'index', j );
+                    a.onclick = function()
+                    {
+                        generateTable( a.getAttribute('direction'), a.getAttribute('index') );
+                    };
+                    a.innerHTML = '<img src="' + (j == sort_index ? sort : 'asc') + '.gif">';
+                    cell.appendChild( a );
+                }
+
+                const cellText = document.createTextNode( caption[ j ] );
+                cell.appendChild( cellText );
+                row.appendChild( cell );
+            }
+
+            tblBody.appendChild(row);
+            // END table Caption
+        }
+
+        function generateTable( sort = 'asc', sort_index = 0 )
+        {
+            if( document.getElementById('city_table') )
+            {
+                document.getElementById('city_table').remove();
+            }
+
+            const tbl = document.createElement("table");
+            tbl.setAttribute('id', 'city_table');
+            const tblBody = document.createElement("tbody");
+
+            data_table.sort( ( a, b ) =>
+            {
+                let nameA = a[sort_index].toLowerCase(),
+                    nameB = b[sort_index].toLowerCase();
+
+                if (nameA < nameB)
+                {
+                    return sort == 'asc' ? -1 : 1;
+                }
+                if (nameA > nameB)
+                {
+                    return sort == 'asc' ? 1 : -1;
+                }
+                return 0
+            } );
+
+            generateCaptionTable( tblBody, sort, sort_index );
+
+            // creating all cells
+            for (let i = 0; i < data_table.length; i++) {
+                const row = document.createElement("tr");
+
+                for (let j = 0; j < 3; j++) {
+                    const cell = document.createElement( 'td' );
+                    const cellText = document.createTextNode(data_table[i][j]);
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
+                }
+
+                tblBody.appendChild(row);
+            }
+
+            tbl.appendChild(tblBody);
+            document.body.appendChild(tbl);
+            tbl.setAttribute("border", "3");
+        }
+
+        function getCities( )
+        {
+            ( async function()
+            {
+                let response = await fetch( 'cities.csv' );
+
+                if( response.ok ) // HTTP = 200, все ОК
+                {
+                    data_table = parceCity( await response.text() );
+                    generateTable( );
+                }
+                else
+                { // HTTP не 200, обробляємо як помилку
+                    console.error( 'Сталася помилка ' + response.status + ': ' + response.statusText );
+                }
+            } )();
+        }
+
+        getByFetch();
+
+   </script>
+</body>
+</html>
