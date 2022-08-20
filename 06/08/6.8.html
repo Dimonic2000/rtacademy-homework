@@ -15,7 +15,23 @@
      або Float
      ** Врахуйте, що min до max можуть бути типу BigInt */
 
-    function isFloat(x) { return !!(x % 1); }
+    //function isFloat(x) { return !!(x % 1); }
+
+    function isFloat(n)
+    {
+        return !(parseInt(n) == n);
+    }
+
+    function isBigInt( val )
+    {
+        /*9007199254740991*/
+        return (
+                !isFloat(val) && val > Number.MAX_SAFE_INTEGER
+                //(parseInt(val) == val.substring(0, val.length-1) && val[val.length-1] == 'n') &&
+
+            );
+
+    }
 
     function getRandomInt( min, max )
     {
@@ -24,9 +40,16 @@
             max = [ min, min = max ][ 0 ];
         }
 
+        if( isBigInt(min) && isBigInt(max) )
+        {
+            console.log('isBigInt');
+            return generateRandomBigInt(min, max);
+        }
+
         if( !isFloat(min) && !isFloat(max) )
         {
             return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+            //return Math.random() * ( max - min + 1 ) + min;
         }
         else
         {
@@ -34,7 +57,32 @@
         }
     }
 
-    let randomInt = getRandomInt( 1, 3 );
+    function generateRandomBigInt(lowBigInt, highBigInt) {
+        if (lowBigInt >= highBigInt) {
+            throw new Error('lowBigInt must be smaller than highBigInt');
+        }
+
+        const difference = highBigInt - lowBigInt;
+        const differenceLength = difference.toString().length;
+        let multiplier = '';
+        while (multiplier.length < differenceLength) {
+            multiplier += Math.random()
+                .toString()
+                .split('.')[1];
+        }
+        multiplier = multiplier.slice(0, differenceLength);
+        const divisor = '1' + '0'.repeat(differenceLength);
+
+        console.log(difference);
+        console.log(multiplier);
+        console.log(divisor);
+
+        const randomDifference = (difference * multiplier) / divisor;
+
+        return lowBigInt + randomDifference;
+    }
+
+    let randomInt = getRandomInt( 100719925, 9007199254 );
 
     console.log( 'Випадкове число: ' + randomInt );
 </script>
