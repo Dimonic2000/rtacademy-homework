@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Завдання AJAX 6.17</title>
+</head>
+<body>
+
+<!--На основі попереднього завдання #6.16,
+після отримання файлів з країнами та містами -
+виконуйте транслітерацію назви країни/міста на українську,
+використовуючи результат завдання #6.7-->
+
+    <script>
+        let country = '',       // Выбранная страна в выпадалке
+            data_table = '';    // Данные подготовленные для вывода в таблицу
+
+        function onClick( )
+        {
+            if( document.getElementById('list_input') )
+            {
+                country = document.getElementById( 'list_input' ).value;
+                getCities( );
+            }
+        }
+
+        function createInput( countries )
+        {
+            let input = document.createElement( 'input' );
+            input.setAttribute( "list", "list" );
+            input.setAttribute( "id", "list_input" );
+
+            let list = document.createElement( 'datalist' );
+            list.setAttribute( "id", "list" );
+
+            document.body.append( input );
+            document.body.append( list );
+
+            countries.forEach(
+                function( item )
+                {
+                    const option = document.createElement( 'option' );
+                    option.value = item.Name;
+                    option.id = item.Code;
+                    list.appendChild( option );
+                }
+            );
+
+            input.onchange = onClick;
+        }
+
+        function getByFetch()
+        {
+            //AJAX: Приклад з використанням fetch()
+            ( async function()
+            {
+                // GET-запит для URL /v3/countries.json
+                let response = await fetch( 'countries.json' );
+
+                if( response.ok ) // HTTP = 200, все ОК
+                {
+                    let jsonContents = await response.json(); // читаємо відповідь в форматі JSON
+                    createInput(jsonContents);
+                }
+                else
+                { // HTTP не 200, обробляємо як помилку
+                    console.error( 'Сталася помилка ' + response.status + ': ' + response.statusText );
+                }
+            } )();
+        }
+
+        let a = {"Ё":"YO","Й":"I","Ц":"TS","У":"U","К":"K","Е":"E","Н":"N","Г":"G","Ш":"SH","Щ":"SCH","З":"Z","Х":"H","Ъ":"'","ё":"yo","й":"i","ц":"ts","у":"u","к":"k","е":"e","н":"n","г":"g","ш":"sh","щ":"sch","з":"z","х":"h","ъ":"'","Ф":"F","Ы":"I","В":"V","А":"a","П":"P","Р":"R","О":"O","Л":"L","Д":"D","Ж":"ZH","Э":"E","ф":"f","ы":"i","в":"v","а":"a","п":"p","р":"r","о":"o","л":"l","д":"d","ж":"zh","э":"e","Я":"Ya","Ч":"CH","С":"S","М":"M","И":"I","Т":"T","Ь":"'","Б":"B","Ю":"YU","я":"ya","ч":"ch","с":"s","м":"m","и":"i","т":"t","ь":"'","б":"b","ю":"yu"};
+
+        function transliterate(entered_text){
+            /*return word.split('').map(function (char) {
+                console.log(char);
+                console.log(a[char]);
+                return a[char] || char;
+            }).join("");*/
+            entered_text = entered_text.replace(/cx/g,'ч');
+            entered_text = entered_text.replace(/Cx/g,'Ч');
+            entered_text = entered_text.replace(/CX/g,'Ч');
+
+            entered_text = entered_text.replace(/cy/g,'ћ');
+            entered_text = entered_text.replace(/Cy/g,'Ћ');
+            entered_text = entered_text.replace(/CY/g,'Ћ');
+
+            entered_text = entered_text.replace(/dy/g,'ђ');
+            entered_text = entered_text.replace(/Dy/g,'Ђ');
+            entered_text = entered_text.replace(/DY/g,'Ђ');
+
+            entered_text = entered_text.replace(/sx/g,'ш');
+            entered_text = entered_text.replace(/Sx/g,'Ш');
+            entered_text = entered_text.replace(/SX/g,'Ш');
+
+            entered_text = entered_text.replace(/zx/g,'ж');
+            entered_text = entered_text.replace(/Zx/g,'Ж');
+            entered_text = entered_text.replace(/ZX/g,'Ж');
+
+            entered_text = entered_text.replace(/A/gi,'А');
+            entered_text = entered_text.replace(/B/gi,'Б');
+            entered_text = entered_text.replace(/C/gi,'Ц');
+            entered_text = entered_text.replace(/D/gi,'Д');
+            entered_text = entered_text.replace(/E/gi,'Е');
+            entered_text = entered_text.replace(/F/gi,'Ф');
+            entered_text = entered_text.replace(/G/gi,'Г');
+            entered_text = entered_text.replace(/H/gi,'Х');
+            entered_text = entered_text.replace(/I/gi,'И');
+            entered_text = entered_text.replace(/J/gi,'Ј');
+            entered_text = entered_text.replace(/K/gi,'К');
+            entered_text = entered_text.replace(/L/gi,'Л');
+            entered_text = entered_text.replace(/M/gi,'М');
+            entered_text = entered_text.replace(/N/gi,'Н');
+            entered_text = entered_text.replace(/O/gi,'О');
+            entered_text = entered_text.replace(/P/gi,'П');
+            entered_text = entered_text.replace(/R/gi,'Р');
+            entered_text = entered_text.replace(/S/gi,'С');
+            entered_text = entered_text.replace(/T/gi,'Т');
+            entered_text = entered_text.replace(/U/gi,'У');
+            entered_text = entered_text.replace(/V/gi,'В');
+            entered_text = entered_text.replace(/Z/gi,'З');
+            entered_text = entered_text.replace(/w/gi,'В');
+            entered_text = entered_text.replace(/Y/gi,'Ю');
+            entered_text = entered_text.replace(/Q/gi,'кю');
+            return entered_text;
+        }
+
+        function changeCapitalization( cityPartName = '', direction = 'lower' )
+        {
+            let firstLetter, otherLetter = '';
+
+            if( direction == 'lower' )
+            {
+                return cityPartName.toLowerCase();
+            }
+            else if( direction == 'upper' )
+            {
+                firstLetter = cityPartName.substring( 0, 1 ).toUpperCase();
+                otherLetter = cityPartName.substring( 1, cityPartName.length ).toLowerCase();
+            }
+
+            return firstLetter + otherLetter;
+        }
+
+        function capitalize( city_name = '' )
+        {
+            const cn_array = city_name.split( "-" );
+            let combine_array = [];
+
+            for( let i = 0; i < cn_array.length; i++ )
+            {
+                if( cn_array[i][1] == "'" )
+                { // случай с апострофом
+                    combine_array.push(
+                        changeCapitalization( cn_array[i][0] , 'lower' ) +
+                        "'" +
+                        changeCapitalization( cn_array[i].substring(2, cn_array[i].length), 'upper' )
+                    );
+                }
+                else
+                {
+                    if(
+                        i === 0 ||                      // первый
+                        i === cn_array.length - 1 ||    // последний
+                        cn_array[ i ].length > 3        // размер > 3
+                    )
+                    {
+                        combine_array.push( changeCapitalization( cn_array[ i ], 'upper' ) );
+                    }
+                    else
+                    {
+                        combine_array.push( changeCapitalization( cn_array[ i ], 'lower' ) );
+                    }
+                }
+            }
+
+            return combine_array.join('-');
+        }
+
+        const parceCity = ( cities ) =>
+        {
+            let contentArray = cities.split( "\n" ),
+                resultArray = [];
+
+            for( let i = 0; i < contentArray.length; i++ )
+            {
+                if( contentArray[i].trim().length >= 10 )
+                {
+                    let row = contentArray[ i ].trim().split( "," );
+
+                    if( country == row[3] )
+                    {
+                        resultArray.push( [ capitalize(transliterate(row[0])), row[1]+', '+row[2], (row[4] ? row[4] : '0') ]);
+                    }
+                }
+            }
+
+            return resultArray;
+        };
+
+        function generateCaptionTable( tblBody, sort = 'asc', sort_index = 0 )
+        {
+            // Формируем заголовок таблицы с функциональностью
+            let caption = [ 'Назва', 'Координати', 'Населення' ];
+
+            const row = document.createElement("tr");
+
+            for (let j = 0; j < caption.length; j++)
+            {
+                const cell = document.createElement( 'th' );
+                if( j != 1 )
+                {
+                    const a = document.createElement( 'a' );
+                    a.setAttribute( 'href', '#' );
+                    a.setAttribute( 'direction', ( sort == 'asc' ? 'desc' : 'asc' ) );
+                    a.setAttribute( 'index', j );
+                    a.onclick = function()
+                    {
+                        generateTable( a.getAttribute('direction'), a.getAttribute('index') );
+                    };
+                    a.innerHTML = '<img src="' + (j == sort_index ? sort : 'asc') + '.gif">';
+                    cell.appendChild( a );
+                }
+
+                const cellText = document.createTextNode( caption[ j ] );
+                cell.appendChild( cellText );
+                row.appendChild( cell );
+            }
+
+            tblBody.appendChild(row);
+            // END table Caption
+        }
+
+        function generateTable( sort = 'asc', sort_index = 0 )
+        {
+            if( document.getElementById('city_table') )
+            {
+                document.getElementById('city_table').remove();
+            }
+
+            const tbl = document.createElement("table");
+            tbl.setAttribute('id', 'city_table');
+            const tblBody = document.createElement("tbody");
+
+            data_table.sort( ( a, b ) =>
+            {
+                let nameA = a[sort_index].toLowerCase(),
+                    nameB = b[sort_index].toLowerCase();
+
+                if (nameA < nameB)
+                {
+                    return sort == 'asc' ? -1 : 1;
+                }
+                if (nameA > nameB)
+                {
+                    return sort == 'asc' ? 1 : -1;
+                }
+                return 0
+            } );
+
+            generateCaptionTable( tblBody, sort, sort_index );
+
+            // creating all cells
+            for (let i = 0; i < data_table.length; i++) {
+                const row = document.createElement("tr");
+
+                for (let j = 0; j < 3; j++) {
+                    const cell = document.createElement( 'td' );
+                    const cellText = document.createTextNode(data_table[i][j]);
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
+                }
+
+                tblBody.appendChild(row);
+            }
+
+            tbl.appendChild(tblBody);
+            document.body.appendChild(tbl);
+            tbl.setAttribute("border", "3");
+        }
+
+        function getCities( )
+        {
+            ( async function()
+            {
+                let response = await fetch( 'cities.csv' );
+
+                if( response.ok ) // HTTP = 200, все ОК
+                {
+                    data_table = parceCity( await response.text() );
+                    generateTable( );
+                }
+                else
+                { // HTTP не 200, обробляємо як помилку
+                    console.error( 'Сталася помилка ' + response.status + ': ' + response.statusText );
+                }
+            } )();
+        }
+
+        getByFetch();
+
+   </script>
+</body>
+</html>
