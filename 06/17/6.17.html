@@ -69,60 +69,69 @@
             } )();
         }
 
-        let a = {"Ё":"YO","Й":"I","Ц":"TS","У":"U","К":"K","Е":"E","Н":"N","Г":"G","Ш":"SH","Щ":"SCH","З":"Z","Х":"H","Ъ":"'","ё":"yo","й":"i","ц":"ts","у":"u","к":"k","е":"e","н":"n","г":"g","ш":"sh","щ":"sch","з":"z","х":"h","ъ":"'","Ф":"F","Ы":"I","В":"V","А":"a","П":"P","Р":"R","О":"O","Л":"L","Д":"D","Ж":"ZH","Э":"E","ф":"f","ы":"i","в":"v","а":"a","п":"p","р":"r","о":"o","л":"l","д":"d","ж":"zh","э":"e","Я":"Ya","Ч":"CH","С":"S","М":"M","И":"I","Т":"T","Ь":"'","Б":"B","Ю":"YU","я":"ya","ч":"ch","с":"s","м":"m","и":"i","т":"t","ь":"'","б":"b","ю":"yu"};
+        function transliterate(words)
+        {
+            let rules = [
+                //{'pattern': 'їв', 'replace': 'iv'},
+                {'pattern': 'іїв', 'replace': 'iyiv'},
+                {'pattern': 'кий', 'replace': 'kyy'},
+                {'pattern': 'иїв', 'replace': 'yiv'},
+                {'pattern': 'ль', 'replace': 'l’'},
+                {'pattern': 'цьк', 'replace': 'ts’k'},
+                {'pattern': 'cьк', 'replace': 's’k'},
+                {'pattern': 'ь', 'replace': '’'},
+                {'pattern': 'щ', 'replace': 'shch'},
+                {'pattern': 'ю', 'replace': '^yu'},
+                {'pattern': 'зг', 'replace': 'zgh'},
+                {'pattern': 'Зг', 'replace': 'Zgh'},
+                {'pattern': 'є', 'replace': '^ye'},
+                {'pattern': 'ї', 'replace': 'yi'},
+                {'pattern': 'й', 'replace': '^y'},
+                {'pattern': 'х', 'replace': 'kh'},
+                {'pattern': 'ц', 'replace': 'ts'},
+                {'pattern': 'ч', 'replace': 'ch'},
+                {'pattern': 'ш', 'replace': 'sh'},
+                {'pattern': 'у', 'replace': 'iu'},
+                {'pattern': 'я', 'replace': 'ya'},
+                {'pattern': 'я', 'replace': 'ia'},
+                {'pattern': '\'', 'replace': '”'},
+                {'pattern': 'ьо', 'replace': 'io'},
+                {'pattern': 'ьї', 'replace': 'ii'},
+                //{'pattern': 'ь', 'replace': ''},
+                {'pattern': 'є', 'replace': 'ie'},
+                {'pattern': 'ж', 'replace': 'zh'},
+                {'pattern': 'а', 'replace': 'a'},
+                {'pattern': 'б', 'replace': 'b'},
+                {'pattern': 'в', 'replace': 'v'},
+                {'pattern': 'г', 'replace': 'h'},
+                {'pattern': 'ґ', 'replace': 'g'},
+                {'pattern': 'д', 'replace': 'd'},
+                {'pattern': 'е', 'replace': 'e'},
+                {'pattern': 'з', 'replace': 'z'},
+                {'pattern': 'и', 'replace': 'y'},
+                {'pattern': 'і', 'replace': 'i'},
+                {'pattern': 'ї', 'replace': 'i'},
+                {'pattern': 'й', 'replace': 'i'},
+                {'pattern': 'к', 'replace': 'k'},
+                {'pattern': 'л', 'replace': 'l'},
+                {'pattern': 'м', 'replace': 'm'},
+                {'pattern': 'н', 'replace': 'n'},
+                {'pattern': 'о', 'replace': 'o'},
+                {'pattern': 'п', 'replace': 'p'},
+                {'pattern': 'р', 'replace': 'r'},
+                {'pattern': 'с', 'replace': 's'},
+                {'pattern': 'т', 'replace': 't'},
+                {'pattern': 'у', 'replace': 'u'},
+                {'pattern': 'ф', 'replace': 'f'},
+            ];
 
-        function transliterate(entered_text){
-            /*return word.split('').map(function (char) {
-                console.log(char);
-                console.log(a[char]);
-                return a[char] || char;
-            }).join("");*/
-            entered_text = entered_text.replace(/cx/g,'ч');
-            entered_text = entered_text.replace(/Cx/g,'Ч');
-            entered_text = entered_text.replace(/CX/g,'Ч');
-
-            entered_text = entered_text.replace(/cy/g,'ћ');
-            entered_text = entered_text.replace(/Cy/g,'Ћ');
-            entered_text = entered_text.replace(/CY/g,'Ћ');
-
-            entered_text = entered_text.replace(/dy/g,'ђ');
-            entered_text = entered_text.replace(/Dy/g,'Ђ');
-            entered_text = entered_text.replace(/DY/g,'Ђ');
-
-            entered_text = entered_text.replace(/sx/g,'ш');
-            entered_text = entered_text.replace(/Sx/g,'Ш');
-            entered_text = entered_text.replace(/SX/g,'Ш');
-
-            entered_text = entered_text.replace(/zx/g,'ж');
-            entered_text = entered_text.replace(/Zx/g,'Ж');
-            entered_text = entered_text.replace(/ZX/g,'Ж');
-
-            entered_text = entered_text.replace(/A/gi,'А');
-            entered_text = entered_text.replace(/B/gi,'Б');
-            entered_text = entered_text.replace(/C/gi,'Ц');
-            entered_text = entered_text.replace(/D/gi,'Д');
-            entered_text = entered_text.replace(/E/gi,'Е');
-            entered_text = entered_text.replace(/F/gi,'Ф');
-            entered_text = entered_text.replace(/G/gi,'Г');
-            entered_text = entered_text.replace(/H/gi,'Х');
-            entered_text = entered_text.replace(/I/gi,'И');
-            entered_text = entered_text.replace(/J/gi,'Ј');
-            entered_text = entered_text.replace(/K/gi,'К');
-            entered_text = entered_text.replace(/L/gi,'Л');
-            entered_text = entered_text.replace(/M/gi,'М');
-            entered_text = entered_text.replace(/N/gi,'Н');
-            entered_text = entered_text.replace(/O/gi,'О');
-            entered_text = entered_text.replace(/P/gi,'П');
-            entered_text = entered_text.replace(/R/gi,'Р');
-            entered_text = entered_text.replace(/S/gi,'С');
-            entered_text = entered_text.replace(/T/gi,'Т');
-            entered_text = entered_text.replace(/U/gi,'У');
-            entered_text = entered_text.replace(/V/gi,'В');
-            entered_text = entered_text.replace(/Z/gi,'З');
-            entered_text = entered_text.replace(/w/gi,'В');
-            entered_text = entered_text.replace(/Y/gi,'Ю');
-            entered_text = entered_text.replace(/Q/gi,'кю');
-            return entered_text;
+            rules.forEach(
+                function( item )
+                {
+                    words = words.replace( new RegExp(item.replace, 'gi'), item.pattern );
+                }
+            );
+            return words;
         }
 
         function changeCapitalization( cityPartName = '', direction = 'lower' )
