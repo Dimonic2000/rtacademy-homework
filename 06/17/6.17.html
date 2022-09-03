@@ -188,14 +188,14 @@
 
         const parceCity = ( cities ) =>
         {
-            let contentArray = cities.split( "\n" ),
+            let content_array = cities.split( "\n" ),
                 resultArray = [];
 
-            for( let i = 0; i < contentArray.length; i++ )
+            for( let i = 0; i < content_array.length; i++ )
             {
-                if( contentArray[i].trim().length >= 10 )
+                if( content_array[i].trim().length >= 10 )
                 {
-                    let row = contentArray[ i ].trim().split( "," );
+                    let row = content_array[ i ].trim().split( "," );
 
                     if( country == row[3] )
                     {
@@ -288,22 +288,19 @@
             tbl.setAttribute("border", "3");
         }
 
-        function getCities( )
+        async function getCities( )
         {
-            ( async function()
-            {
-                let response = await fetch( 'cities.csv' );
+            let response = await fetch( 'cities.csv' );
 
-                if( response.ok ) // HTTP = 200, все ОК
-                {
-                    data_table = parceCity( await response.text() );
-                    generateTable( );
-                }
-                else
-                { // HTTP не 200, обробляємо як помилку
-                    console.error( 'Сталася помилка ' + response.status + ': ' + response.statusText );
-                }
-            } )();
+            if( response.ok ) // HTTP = 200, все ОК
+            {
+                data_table = parceCity( await response.text() );
+                generateTable( );
+            }
+            else
+            { // HTTP не 200, обробляємо як помилку
+                console.error( 'Сталася помилка ' + response.status + ': ' + response.statusText );
+            }
         }
 
         getByFetch();
